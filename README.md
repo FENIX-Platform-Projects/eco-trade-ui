@@ -1,2 +1,2 @@
-# trade-eco-ui
+# eco-trade-ui
 Trade ECO Countries
