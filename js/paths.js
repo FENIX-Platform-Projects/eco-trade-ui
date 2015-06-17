@@ -1,7 +1,8 @@
 define(function() {
 
     var FENIX_CDN = '//fenixrepo.fao.org/cdn',
-        SUBMODULES_CHARTS = '../submodule/fenix-ui-chart-creator/src/js/';
+        SUBMODULES_CHARTS = '../submodule/fenix-ui-chart-creator/src/js/',
+        SUBMODULES_COMMON = '../submodule/fenix-ui-common/';
 
     var config = {
 
@@ -54,6 +55,8 @@ define(function() {
                 'fx-c-c/templates' :  SUBMODULES_CHARTS + './templates',
                 'fx-c-c/creators' :  SUBMODULES_CHARTS + './creators',
 
+                WDSClient: SUBMODULES_COMMON + '/js/WDSClient',
+
                 // Charts third party libs
                 text: '//fenixapps.fao.org/repository/js/requirejs/plugins/text/2.0.12/text',
                 jquery: "//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min",
@@ -81,6 +84,8 @@ define(function() {
                 handlebars: {
                     exports: 'Handlebars'
                 },
+
+                WDSClient: ['jquery'],
 
                 'jquery-ui': ['jquery'],
                 'jquery.hoverIntent': ['jquery'],
