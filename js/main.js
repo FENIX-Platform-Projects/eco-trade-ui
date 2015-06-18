@@ -6,9 +6,11 @@ requirejs(['./paths'], function (paths) {
 	requirejs([
 		'jquery','underscore','bootstrap','handlebars',
 		'WDSClient',
-		'../config/config'
+		'fx-c-c/start',
+		'Config'
 	], function ($, _, bootstrap, Handlebars,
 		WDSClient,
+		FXChart,
 		Config
 	) {
 
@@ -22,6 +24,8 @@ requirejs(['./paths'], function (paths) {
 			    console.log(resp);
 			}
 		});
+
+		console.log(FXChart)
 
 	});
 });
