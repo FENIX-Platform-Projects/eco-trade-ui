@@ -1,32 +1,27 @@
 /*global requirejs*/
 requirejs(['./paths'], function (paths) {
 
-    requirejs.config(paths);
+	requirejs.config(paths);
 
-    requirejs([
-    	//'fx-flude-ui/start',
-    	'WDSClient'
-    ], function (
-    	//Module,
-    	WDSClient
-    ) {
-        
-/*  var m = new Module();
-        m.init();
-*/
-		var wdsClient = new WDSClient({
-			datasource: 'DEMO_FENIX'
-		});
+	requirejs([
+		'jquery','underscore','bootstrap','handlebars',
+		'WDSClient',
+		'../config/config'
+	], function ($, _, bootstrap, Handlebars,
+		WDSClient,
+		Config
+	) {
+
+		var wdsClient = new WDSClient(Config.wds_config);
 
 		wdsClient.retrieve({
 			payload: {
-			    query: 'SELECT year FROM ecotrade_region_trade'
+			    query: Config.queries.test
 			},
-			outputType: 'object',
 			success: function(resp) {
 			    console.log(resp);
 			}
 		});
 
-    });
+	});
 });
