@@ -46,10 +46,38 @@
             <div class="tab-content">
                 <div class="tab-pane active row" id="page_region">
                     REGION
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div id="chart_commodity">
+                                <!-- FILLED BY JS -->
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div id="chart_within_eco">
+                                <!-- FILLED BY JS -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane row" id="page_countries">
                     COUNTRIES
-                </div>                
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p>TRADE BALANCE</p>
+                            <div id="chart_balance">
+                                <!-- FILLED BY JS -->
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <p>BAR CHART</p>
+                            <div id="chart_bars">
+                                <!-- FILLED BY JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>            
@@ -77,16 +105,112 @@ requirejs(['../js/paths'], function (paths) {
         Config
     ) {
 
+        debugger;
+        var creator = new FXChart();
         var wdsClient = new WDSClient(Config.wds_config);
 
-        wdsClient.retrieve({
-            payload: {
-                query: Config.queries.test
-            },
-            success: function(resp) {
-                console.log(resp);
+        debugger;
+
+
+        init();
+        function init() {
+            // country
+            createChart(Config.queries.trade_balance, true, true)
+            createChart(Config.queries.bar_chart,true, false)
+            // region
+           /* createChart(Config.queries.chart_within,true)
+            createChart(Config.queries.chart_year,false)*/
+        }
+
+
+
+        function createChart(query, isCountry,isSpecial) {
+            var callback;
+            if (isCountry) {
+                callback = (isSpecial) ? renderCountryBalance : renderCountryNormal;
+            } else {
+                callback = (isSpecial) ? renderRegionWithin : renderRegionBar;
             }
-        });
+
+
+            wdsClient.retrieve({
+                payload: {
+                    query: query
+                },
+                success: function (model) {
+                    console.log(model);
+                    creator.init({
+                        model: model,
+                        template: {},
+                        creator: {},
+                        onReady: callback
+                    });
+                }
+            });
+        }
+
+
+        function renderCountryBalance(creator) {
+            console.log(creator)
+
+            creator.render({
+                container: "#chart_balance",
+                creator: {
+                    chartObj: {
+                        chart: {
+                            type: "column"
+                        }
+                    }
+                }
+            });
+        }
+
+
+        function renderCountryNormal(creator) {
+            console.log(creator)
+
+            creator.render({
+                container: "#chart_bars",
+                creator: {
+                    chartObj: {
+                        chart: {
+                            type: "column"
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderRegionWithin(creator) {
+            console.log(creator)
+
+            creator.render({
+                container: "#chart_within_eco",
+                creator: {
+                    chartObj: {
+                        chart: {
+                            type: "column"
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderRegionBar(creator) {
+            console.log(creator)
+
+            creator.render({
+                container: "#chart_commodity",
+                creator: {
+                    chartObj: {
+                        chart: {
+                            type: "column"
+                        }
+                    }
+                }
+            });
+        }
+
 
         console.log(FXChart)
 
