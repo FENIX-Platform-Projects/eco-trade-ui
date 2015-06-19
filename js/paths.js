@@ -8,24 +8,19 @@ define(function() {
 
             Config:     "config/config",
 
-            i18n:       FX_CDN + "requirejs/plugins/i18n/2.0.4/i18n",
-            text:       FX_CDN + "requirejs/plugins/text/2.0.12/text",
-            jquery:     FX_CDN + "jquery/2.1.1/jquery.min",
-            chosen:     FX_CDN + "chosen/1.2.0/chosen.jquery.min",            
-            domready:   FX_CDN + "requirejs/plugins/domready/2.0.1/domReady",
-            bootstrap:  FX_CDN + "bootstrap/3.3.4/js/bootstrap.min",
-            highcharts: FX_CDN + "highcharts/4.0.4/js/highcharts",
-            underscore: FX_CDN + "underscore/1.7.0/underscore.min",
-            handlebars: FX_CDN + "handlebars/2.0.0/handlebars.min",
-            sweetAlert: FX_CDN + 'sweet-alert/0.4.2/sweet-alert',
-            amplify:    FX_CDN + "amplify/1.1.2/amplify.min",
-            csvjson:    FX_CDN + "csvjson/1.0/csvjson",
-            jstree:     FX_CDN + "jstree/3.0.8/dist/jstree.min",
-            q:          FX_CDN + "q/1.1.2/q",
-
-            'fx-flude-ui/start':  'js/start',
-            'fx-flude-ui/html':   './html',
-            'fx-flude-ui/nls':    './nls',
+            i18n:        FX_CDN + "requirejs/plugins/i18n/2.0.4/i18n",
+            text:        FX_CDN + "requirejs/plugins/text/2.0.12/text",
+            jquery:      FX_CDN + "jquery/2.1.1/jquery.min",
+            chosen:      FX_CDN + "chosen/1.2.0/chosen.jquery.min",
+            domready:    FX_CDN + "requirejs/plugins/domready/2.0.1/domReady",
+            bootstrap:   FX_CDN + "bootstrap/3.3.4/js/bootstrap.min",
+            highcharts:  FX_CDN + "highcharts/4.0.4/js/highcharts",
+            underscore:  FX_CDN + "underscore/1.7.0/underscore.min",
+            handlebars:  FX_CDN + "handlebars/2.0.0/handlebars.min",
+            sweetAlert:  FX_CDN + 'sweet-alert/0.4.2/sweet-alert',
+            amplify:     FX_CDN + "amplify/1.1.2/amplify.min",
+            jstree:      FX_CDN + "jstree/3.0.8/dist/jstree.min",
+            rangeslider: FX_CDN + "jquery.rangeslider/5.7.0/jQRangeSlider-min",
 
             WDSClient: 'submodule/fenix-ui-common/js/WDSClient',
 
@@ -59,6 +54,7 @@ define(function() {
             handlebars: {
                 exports: 'Handlebars'
             },
+            rangeslider: ['jquery', 'jquery-ui'],
             WDSClient: ['jquery'],
             'jquery-ui': ['jquery'],
             'jquery.hoverIntent': ['jquery'],

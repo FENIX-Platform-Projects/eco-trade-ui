@@ -7,14 +7,21 @@ requirejs(['./paths'], function (paths) {
 
 	requirejs([
 		'jquery','underscore','bootstrap','handlebars',
+		'Config',
 		'WDSClient',
-		'fx-c-c/start',
-		'Config'
+		'js/region/filter'
 	], function ($, _, bootstrap, Handlebars,
+		Config,		
 		WDSClient,
-		FXChart,
-		Config
+		regionFilter
 	) {
+
+
+		var filter = new regionFilter({
+			container: '#page_region'
+		});
+
+		/*
 
 		var wdsClient = new WDSClient(Config.wds_config);
 
@@ -26,6 +33,6 @@ requirejs(['./paths'], function (paths) {
 			    console.log(resp);
 			}
 		});
-
+*/
 	});
 });

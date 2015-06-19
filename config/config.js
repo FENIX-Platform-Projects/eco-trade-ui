@@ -3,6 +3,17 @@ define({
         datasource: 'DEMO_FENIX',
 		outputType: 'array'
 	},
+	filter_region: {
+		bounds: {
+			min: 2000,
+			max: 2015
+		},
+		step: 1,
+		defaultValues: {
+			min: 2002,
+			max: 2010
+		}
+	},
 	queries: {
 		test: 'SELECT year FROM ecotrade_region_trade',
 //    "from country_stat where fertilizer = '{PRODUCT}' and country = '{COUNTRY}' and n_p = '{KIND}' ) c  join codes_elements on element = element_code WHERE value is not null ORDER BY element ASC, year ASC"
