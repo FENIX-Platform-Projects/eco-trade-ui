@@ -1,6 +1,8 @@
 /*global requirejs*/
 requirejs(['./paths'], function (paths) {
 
+	paths.baseUrl = './';
+
 	requirejs.config(paths);
 
 	requirejs([
@@ -24,8 +26,6 @@ requirejs(['./paths'], function (paths) {
 			    console.log(resp);
 			}
 		});
-
-		console.log(FXChart)
 
 	});
 });
