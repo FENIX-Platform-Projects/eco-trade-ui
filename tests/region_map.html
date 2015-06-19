@@ -10,15 +10,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <!-- Third Party CSS -->
+
+    <link href="//fenixrepo.fao.org/cdn/js/jquery-ui/1.10.3/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+    <link href="//fenixrepo.fao.org/cdn/js/jquery.power.tip/1.2.0/css/jquery.powertip.css" rel="stylesheet" />    
+    <link href="//fenixrepo.fao.org/cdn/js/jquery.rangeslider/5.7.0/css/classic-min.css" rel="stylesheet" />
     <link href="//fenixrepo.fao.org/cdn/js/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//fenixrepo.fao.org/cdn/js/leaflet/0.7.3/leaflet.css" rel="stylesheet" />
 
-    <!-- FENIX-UI-MAP CSS -->
-    <link rel="stylesheet" href="//fenixrepo.fao.org/cdn/js/leaflet/0.7.3/leaflet.css" />
-    <link rel="stylesheet" href="//fenixrepo.fao.org/cdn/js/jquery.power.tip/1.2.0/css/jquery.powertip.css" type="text/css" />
-    <link rel="stylesheet" href="//fenixrepo.fao.org/cdn/js/jquery-ui/1.10.3/jquery-ui-1.10.3.custom.min.css" />
-    <link rel="stylesheet" href="//fenixrepo.fao.org/cdn/js/fenix-ui-map/0.1/fenix-ui-map.min.css" />
-
+    <link href="//fenixrepo.fao.org/cdn/js/fenix-ui-map/0.1/fenix-ui-map.min.css" rel="stylesheet" />
+    
     <!-- FENIX style CSS -->
     <link href="http://fenixrepo.fao.org/cdn/fenix/fenix-ui-common/0.0.1/css/fenix-style.css" rel="stylesheet">
 
@@ -70,27 +70,40 @@ requirejs(['../js/paths'], function (paths) {
         'jquery','underscore','bootstrap','handlebars',
         'Config',        
         'WDSClient',
-        'js/region/map'
+        'js/region/map',
+        'js/region/filter',
     ], function ($, _, bootstrap, Handlebars,
         Config,        
         WDSClient,
-        regionMap
+        regionMap,
+        regionFilter
     ) {
 
         var wdsClient = new WDSClient(Config.wds_config);
 
-        wdsClient.retrieve({
-            payload: {
-                query: Config.queries.test
-            },
-            success: function(resp) {
-                console.log(resp);
+        var filter = new regionFilter({
+            container: '#page_region',
+            onSubmit: function(selection) {
+
+                selection.partner_code = '1';
+                selection.commodity_code = 'AGR';
+                selection.year_list = selection.year_list.join();
+                
+                wdsClient.retrieve({
+                    payload: {
+                        query: Config.queries.region_year,
+                        queryVars: selection
+                    },
+                    success: function(data) {
+                        console.log('RESP WDS', data);
+                    }
+                });
+/*
+                var rmapData = {};
+
+                var rmap = new regionMap('#page_region', rmapData);*/
             }
         });
-
-        var rmapData = {};
-
-        var rmap = new regionMap('#page_region', rmapData);
 
     });
 });    
