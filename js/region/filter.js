@@ -1,10 +1,12 @@
 define([
     'jquery','underscore','bootstrap','handlebars','jstree','rangeslider',
     'Config',
+    'Codelists',
     'text!html/region/filter.html',
 ], function (
     $, _, bootstrap, Handlebars, jstree, rangeslider,
     Config,
+    Codelists,
     tmplFilter
 ) {
     'use strict';
@@ -21,7 +23,9 @@ define([
         });
 
         self.selection = {
-            year_list: []
+            year_list: [],
+            commodity_code: null,
+            trade_flow_code: null
         };
 
         self.$container = (self.opts.container instanceof jQuery) ? self.opts.container : $(self.opts.container);
@@ -35,10 +39,48 @@ define([
             self.opts.onSubmit(self.selection);
         });
 
+        self.initCommodities();
         self.initYear();
+        self.initFlow();        
     };
 
-    FILTER.prototype.initYear = function(target) {
+    FILTER.prototype.initFlow = function() {
+
+        var self = this;
+    
+        var radioComm$ = $('input[name="trade_flow_code"]:radio', self.$container);
+        
+        radioComm$.on('change', function (e, data) {
+            e.preventDefault();
+            self.selection.trade_flow_code = $(e.target).val();
+        });
+
+        self.selection.trade_flow_code = radioComm$.val();
+    };
+
+
+    FILTER.prototype.initCommodities = function() {
+
+        var self = this;
+    
+        var treeComm$ = $('#filter_commodity_code', self.$container);
+
+        self.listComm = $('#filter_commodity_code', self.$container).jstree({
+            plugins: ["wholerow", "checkbox"],
+            core: {
+                multiple: false,
+                themes: {
+                    icons: false
+                },
+                data: Codelists.commodities
+            }
+        }).on('changed.jstree', function (e, data) {
+            e.preventDefault();
+            self.selection.commodity_code = data.selected[0];
+        });
+    };
+
+    FILTER.prototype.initYear = function() {
 
         var self = this;
     
@@ -46,18 +88,14 @@ define([
 
         rangeMonths$.rangeSlider(Config.filter_region);
 
+        var vals = rangeMonths$.rangeSlider("values");
+        self.selection.year_list = _.range(vals.min, vals.max+1).join();
+
         rangeMonths$.on('valuesChanged', function(e, sel) {
-
-            self.selection.year_list = _.range(sel.values.min, sel.values.max+1);
-
-            console.log('valuesChanged',self.selection);
+            self.selection.year_list = _.range(sel.values.min, sel.values.max+1).join();
         });
 
-        var vals = rangeMonths$.rangeSlider("values");
-
-        self.selection.year_list = _.range(vals.min, vals.max);
-
-        self.slider = $("#range").data("ionRangeSlider");
+        self.rangeYear = $("#range").data("ionRangeSlider");
     };
 
 
@@ -66,7 +104,7 @@ define([
     };
 
     FILTER.prototype.reset = function() {
-        self.slider.reset();
+        self.rangeYear.reset();
     };
 
     return FILTER;

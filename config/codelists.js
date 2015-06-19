@@ -1,9 +1,9 @@
 define({
-  commodities: {
-      AGR: "Cereals",
-      FUE: "Mineral fuels, mineral oils and products of their distillation: bituminous substances: mineral waxes",
-      MAN: "Miscellaneous manufactured articles"
-  },
+  commodities: [
+      {id: 'AGR', text: "Agriculture", state: { selected: true } },
+      {id: 'MAN', text: "Manufactured articles" },
+      {id: 'FUE', text: "Mineral fuel" }
+  ],
   trades: {
       IMP: "Import",
       EXP: "Export"
