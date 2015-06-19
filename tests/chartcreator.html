@@ -105,21 +105,21 @@ requirejs(['../js/paths'], function (paths) {
         Config
     ) {
 
-        debugger;
         var creator = new FXChart();
         var wdsClient = new WDSClient(Config.wds_config);
 
-        debugger;
 
 
         init();
         function init() {
             // country
-            createChart(Config.queries.trade_balance, true, true)
-            createChart(Config.queries.bar_chart,true, false)
+            createChart(Config.queries.country_balance, true, true)
+            createChart(Config.queries.country_bar,true,false)
+
             // region
-           /* createChart(Config.queries.chart_within,true)
-            createChart(Config.queries.chart_year,false)*/
+            createChart(Config.queries.region_within,false, true)
+            createChart(Config.queries.region_year,false, false)
+
         }
 
 
@@ -131,14 +131,20 @@ requirejs(['../js/paths'], function (paths) {
             } else {
                 callback = (isSpecial) ? renderRegionWithin : renderRegionBar;
             }
+            console.log(callback)
 
 
             wdsClient.retrieve({
                 payload: {
                     query: query
+                  /*  queryVars: {
+                        year_list: [2001,2002].join(),
+                        trade_flow_code:"EXP",
+                        commodity_code:"AGR",
+                        nacazzzta: "pd"
+                    }*/
                 },
                 success: function (model) {
-                    console.log(model);
                     creator.init({
                         model: model,
                         template: {},
@@ -168,7 +174,6 @@ requirejs(['../js/paths'], function (paths) {
 
         function renderCountryNormal(creator) {
             console.log(creator)
-
             creator.render({
                 container: "#chart_bars",
                 creator: {
@@ -186,12 +191,12 @@ requirejs(['../js/paths'], function (paths) {
 
             creator.render({
                 container: "#chart_within_eco",
-                creator: {
-                    chartObj: {
-                        chart: {
-                            type: "column"
-                        }
-                    }
+                adapter: {
+                    // used in init just for MATRIX and FENIX
+                    xOrder: 'asc',
+                    xDimensions: [0],
+                    valueDimensions: 2,
+                    seriesDimensions: [1]
                 }
             });
         }
@@ -201,6 +206,13 @@ requirejs(['../js/paths'], function (paths) {
 
             creator.render({
                 container: "#chart_commodity",
+                adapter: {
+                    // used in init just for MATRIX and FENIX
+                    xOrder: 'asc',
+                    xDimensions: [0],
+                    valueDimensions: 2,
+                    seriesDimensions: [1]
+                },
                 creator: {
                     chartObj: {
                         chart: {
