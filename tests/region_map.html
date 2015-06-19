@@ -97,12 +97,13 @@ requirejs(['../js/paths'], function (paths) {
                         console.log('RESP WDS', data);
                     }
                 });
-/*
-                var rmapData = {};
-
-                var rmap = new regionMap('#page_region', rmapData);*/
             }
         });
+
+
+        var rmapData = {};
+
+        var rmap = new regionMap('#page_region', rmapData);        
 
     });
 });    
