@@ -135,14 +135,12 @@ requirejs(['../js/paths'], function (paths) {
 
 
             wdsClient.retrieve({
-                payload: {
-                    query: query
-                  /*  queryVars: {
+                payload: {query: query,
+                   queryVars: {
                         year_list: [2001,2002].join(),
                         trade_flow_code:"EXP",
                         commodity_code:"AGR",
-                        nacazzzta: "pd"
-                    }*/
+                    }
                 },
                 success: function (model) {
                     creator.init({
