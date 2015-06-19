@@ -1,7 +1,7 @@
 define([
     'jquery','underscore','bootstrap','handlebars','jstree',
     'Config',
-    'text!../html/region/map.html',
+    'text!html/region/map.html',
     'fenix-ui-map'
 ], function (
     $, _, bootstrap, Handlebars, jstree,
@@ -11,68 +11,95 @@ define([
 ) {
     'use strict';
 
-    $tmplMap = $(Handlebars.compile(tmplMap)()).appendTo('#page_region');
+    function MAP(target, data) {
 
-	$tmplMap.find('#map_partners_region').jstree({
-		core: {
-			data: dataTree,
-			themes: {
-				icons: false
-			}
-		},
-		"plugins": ["search", "wholerow", "checkbox"],
-		"search": {
-			show_only_matches: true
-		}
-	}).on('changed.jstree', function (e, data) {
-		e.preventDefault();
-		data.selected;
-	});
-
-	return function MAP(opts) {
-		this.
-	}
-
-/*
-    function MAP() {
         this.o = {
-            s: {
-                placeholder: '#content',
-                map: '[data-role="map"]',
-                indicator: '[data-role="indicator"]',
-                year: '[data-role="year"]',
-                incomes: '[data-role="incomes"]',
-                region: '[data-role="region"]',
-                domain: '[data-role="domain"]',
-                chart: '[data-role="chart"]',
-            },
-            data: null,
+            data: data,
             cl: {
                 indicators: null,
                 default_indicator: "NFLoss"
             },
-
             selectedCountries: []
-        }
+        };
+        
+        this.$target = (target instanceof jQuery) ? target : $(target);
+        this.$target.append( Handlebars.compile(tmplMap)() );
+
+        this.initMap('#map_partners_region');
     };
 
-    MAP.prototype.init = function(config) {
-        $.extend(true, this.o, config);
-        this.o.data = $.parseJSON(data);
-        this.o.cl.indicators = $.parseJSON(indicators);
-        this.$placeholder = $(this.o.s.placeholder);
+    MAP.prototype.initMap = function(id) {
+        var layers = 'fenix:gaul0_faostat_3857',
+            joinColumn = 'iso3',
+            joinLabel = 'faost_n';
 
-        // render
-        this.render(this.o.data);
+        this.map = new FM.Map(id, {
+            plugins: {
+                zoomcontrol: 'bottomright',
+                disclaimerfao: true,
+                fullscreen: true,
+                geosearch: true,
+                mouseposition: false,
+                controlloading: true,
+                zoomResetControl: true
+            },
+            guiController: {
+                overlay: true,
+                baselayer: true,
+                wmsLoader: false
+            }
+        });
+        this.map.createMap();
+
+        this.o.joinlayer = new FM.layer({
+            layers: layers,
+            //layertitle: '',
+            opacity: '0.7',
+            joincolumn: joinColumn,
+            joincolumnlabel: joinLabel,
+            joindata: [],
+            mu: "",
+            legendsubtitle: "",
+            layertype: 'JOIN',
+            jointype: 'shaded',
+            openlegend: true,
+            defaultgfi: true,
+            colorramp: 'Greens',
+            intervals: 7,
+            lang: 'en',
+            customgfi: {
+                content: {
+                    en: "{{"+ joinColumn +"}}"
+                },
+                showpopup: false,
+                callback: _.bind(this.handleCountrySelection, this)
+            }
+        });
+        // this.mapap.addLayer(this.o.joinlayer);
+
+        this.map.addLayer(new FM.layer({
+            layers: 'fenix:gaul0_line_3857',
+            layertitle: 'Country Boundaries',
+            urlWMS: 'http://fenix.fao.org/geoserver',
+            opacity: '0.9',
+            zindex: '500',
+            lang: 'en'
+        }));
+
+        this.o.l_highlight_countries = new FM.layer({
+            layers: layers,
+            layertitle: '',
+            urlWMS: 'http://fenix.fao.org/geoserver',
+            zindex: '550',
+            style: 'highlight_polygon',
+            cql_filter: "iso3 IN ('0')",
+            hideLayerInControllerList: true,
+            lang: 'en'
+        });
+        this.map.addLayer(this.o.l_highlight_countries);
     };
 
     MAP.prototype.render = function(data) {
-
-        // Load template.
-        var source = $(structure).html();
-        var template = Handlebars.compile(source);
-        var html = template();
-        this.$placeholder.html(html);
 
         // init chosen
         this.$indicator = $(this.o.s.indicator).chosen();
@@ -110,77 +137,6 @@ define([
         });
         $c.html(html);
         $c.trigger("chosen:updated");
-    };
-
-    MAP.prototype.initMap = function(c) {
-        var layers = 'fenix:gaul0_faostat_3857',
-            joinColumn = 'iso3',
-            joinLabel = 'faost_n';
-
-        this.o.m = new FM.Map(c, {
-            plugins: {
-                zoomcontrol: 'bottomright',
-                disclaimerfao: true,
-                fullscreen: true,
-                geosearch: true,
-                mouseposition: false,
-                controlloading : true,
-                zoomResetControl: true
-            },
-            guiController: {
-                overlay: true,
-                baselayer: true,
-                wmsLoader: true
-            }
-        });
-        this.o.m.createMap();
-
-        this.o.joinlayer = new FM.layer({
-            layers: layers,
-            layertitle: i18n.indicator,
-            opacity: '0.7',
-            joincolumn: joinColumn,
-            joincolumnlabel: joinLabel,
-            joindata: [],
-            mu: "",
-            legendsubtitle: "",
-            layertype: 'JOIN',
-            jointype: 'shaded',
-            openlegend: true,
-            defaultgfi: true,
-            colorramp: 'Greens',
-            intervals: 7,
-            lang: 'en',
-            customgfi: {
-                content: {
-                    en: "{{"+ joinColumn +"}}"
-                },
-                showpopup: false,
-                callback: _.bind(this.handleCountrySelection, this)
-            }
-        });
-        // this.o.map.addLayer(this.o.joinlayer);
-
-        this.o.m.addLayer(new FM.layer({
-            layers: 'fenix:gaul0_line_3857',
-            layertitle: 'Country Boundaries',
-            urlWMS: 'http://fenix.fao.org/geoserver',
-            opacity: '0.9',
-            zindex: '500',
-            lang: 'en'
-        }));
-
-        this.o.l_highlight_countries = new FM.layer({
-            layers: layers,
-            layertitle: '',
-            urlWMS: 'http://fenix.fao.org/geoserver',
-            zindex: '550',
-            style: 'highlight_polygon',
-            cql_filter: "iso3 IN ('0')",
-            hideLayerInControllerList: true,
-            lang: 'en'
-        });
-        this.o.m.addLayer(this.o.l_highlight_countries);
     };
 
     MAP.prototype.resetCountries = function() {
@@ -397,8 +353,7 @@ define([
 
     MAP.prototype.getMapData = function(data, indicator) {
 
-    };
+    };//*/
 
     return MAP;
-    //*/
 });

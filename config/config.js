@@ -4,6 +4,6 @@ define({
 		outputType: 'object'
 	},
 	queries: {
-		test: 'SELECT year FROM ecotrade_region_trade'
+		test: 'SELECT year FROM ecotrade.ecotrade_region_trade'
 	}	
 });

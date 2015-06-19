@@ -70,14 +70,13 @@ requirejs(['../js/paths'], function (paths) {
         'jquery','underscore','bootstrap','handlebars',
         'Config',        
         'WDSClient',
-        'region/map'
+        'js/region/map'
     ], function ($, _, bootstrap, Handlebars,
         Config,        
         WDSClient,
         regionMap
     ) {
 
-console.log(regionMap);
 /*        var wdsClient = new WDSClient(Config.wds_config);
 
         wdsClient.retrieve({
@@ -85,11 +84,13 @@ console.log(regionMap);
                 query: Config.queries.test
             },
             success: function(resp) {
-
+                console.log(resp);
             }
         });*/
 
-        
+        var rmapData = {};
+
+        var rmap = new regionMap('#page_region', rmapData);
 
     });
 });    
