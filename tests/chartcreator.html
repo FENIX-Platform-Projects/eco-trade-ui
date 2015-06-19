@@ -46,10 +46,38 @@
             <div class="tab-content">
                 <div class="tab-pane active row" id="page_region">
                     REGION
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div id="chart_commodity">
+                                <!-- FILLED BY JS -->
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div id="chart_within_eco">
+                                <!-- FILLED BY JS -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane row" id="page_countries">
                     COUNTRIES
-                </div>                
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p>TRADE BALANCE</p>
+                            <div id="chart_balance">
+                                <!-- FILLED BY JS -->
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <p>BAR CHART</p>
+                            <div id="chart_bars">
+                                <!-- FILLED BY JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>            
@@ -77,16 +105,124 @@ requirejs(['../js/paths'], function (paths) {
         Config
     ) {
 
+        var creator = new FXChart();
         var wdsClient = new WDSClient(Config.wds_config);
 
-        wdsClient.retrieve({
-            payload: {
-                query: Config.queries.test
-            },
-            success: function(resp) {
-                console.log(resp);
+
+
+        init();
+        function init() {
+            // country
+            createChart(Config.queries.country_balance, true, true)
+            createChart(Config.queries.country_bar,true,false)
+
+            // region
+            createChart(Config.queries.region_within,false, true)
+            createChart(Config.queries.region_year,false, false)
+
+        }
+
+
+
+        function createChart(query, isCountry,isSpecial) {
+            var callback;
+            if (isCountry) {
+                callback = (isSpecial) ? renderCountryBalance : renderCountryNormal;
+            } else {
+                callback = (isSpecial) ? renderRegionWithin : renderRegionBar;
             }
-        });
+            console.log(callback)
+
+
+            wdsClient.retrieve({
+                payload: {
+                    query: query
+                  /*  queryVars: {
+                        year_list: [2001,2002].join(),
+                        trade_flow_code:"EXP",
+                        commodity_code:"AGR",
+                        nacazzzta: "pd"
+                    }*/
+                },
+                success: function (model) {
+                    creator.init({
+                        model: model,
+                        template: {},
+                        creator: {},
+                        onReady: callback
+                    });
+                }
+            });
+        }
+
+
+        function renderCountryBalance(creator) {
+            console.log(creator)
+
+            creator.render({
+                container: "#chart_balance",
+                creator: {
+                    chartObj: {
+                        chart: {
+                            type: "column"
+                        }
+                    }
+                }
+            });
+        }
+
+
+        function renderCountryNormal(creator) {
+            console.log(creator)
+            creator.render({
+                container: "#chart_bars",
+                creator: {
+                    chartObj: {
+                        chart: {
+                            type: "column"
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderRegionWithin(creator) {
+            console.log(creator)
+
+            creator.render({
+                container: "#chart_within_eco",
+                adapter: {
+                    // used in init just for MATRIX and FENIX
+                    xOrder: 'asc',
+                    xDimensions: [0],
+                    valueDimensions: 2,
+                    seriesDimensions: [1]
+                }
+            });
+        }
+
+        function renderRegionBar(creator) {
+            console.log(creator)
+
+            creator.render({
+                container: "#chart_commodity",
+                adapter: {
+                    // used in init just for MATRIX and FENIX
+                    xOrder: 'asc',
+                    xDimensions: [0],
+                    valueDimensions: 2,
+                    seriesDimensions: [1]
+                },
+                creator: {
+                    chartObj: {
+                        chart: {
+                            type: "column"
+                        }
+                    }
+                }
+            });
+        }
+
 
         console.log(FXChart)
 
