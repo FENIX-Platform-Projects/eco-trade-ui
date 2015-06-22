@@ -1,5 +1,15 @@
+define([], function(){
+
+    'use strict'
+
+    function TableHandler(){};
 
 
-//EXAMPLE fenix-ui-common table
+    TableHandler.prototype.render = function() {
 
-//https://github.com/FENIX-Platform-Projects/afo-ui/blob/master/prices_detailed.js#L230
+    };
+
+
+    return TableHandler;
+
+})
