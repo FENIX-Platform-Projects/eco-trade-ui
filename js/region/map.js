@@ -31,6 +31,7 @@ define([
                 commodity_code: null,
                 trade_flow_code: null
             },
+            joinlayer: null,
             selectedCountries: [],
             cl: {
                 indicators: null
@@ -100,6 +101,7 @@ define([
     };
 
     MAP.prototype.initMap = function(id) {
+
         var layers = 'fenix:gaul0_faostat_3857',
             joinColumn = 'gaul0',
             joinLabel = 'faost_n';
@@ -131,7 +133,7 @@ define([
             lang: 'en'
         }));
 
-        this.o.l_highlight_countries = new FM.layer({
+/*        this.o.l_highlight_countries = new FM.layer({
             layers: layers,
             layertitle: '',
             urlWMS: 'http://fenix.fao.org/geoserver',
@@ -141,9 +143,9 @@ define([
             hideLayerInControllerList: true,
             lang: 'en'
         });
-        this.map.addLayer(this.o.l_highlight_countries);
+        this.map.addLayer(this.o.l_highlight_countries);*/
     };
-
+/*
     MAP.prototype.resetCountries = function() {
         this.o.selectedCountries = [];
         this.highlightCountries(this.o.selectedCountries);
@@ -158,7 +160,7 @@ define([
             this.o.l_highlight_countries.layer.cql_filter = "gaul0 IN ('0')";
 
         this.o.l_highlight_countries.redraw();
-    };
+    };*/
 
     MAP.prototype.updateJoinLayer = function(resetCountries) {
         var indicator = this.$indicator.val();
