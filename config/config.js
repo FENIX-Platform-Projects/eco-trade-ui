@@ -6,7 +6,7 @@ define({
 	filter_region: {
 		bounds: {
 			min: 2000,
-			max: 2015
+			max: 2014
 		},
 		step: 1,
 		defaultValues: {

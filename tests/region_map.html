@@ -19,6 +19,7 @@
     <link href="//fenixrepo.fao.org/cdn/js/jstree/3.0.8/dist/themes/default/style.min.css" rel="stylesheet" />
     <link href="//fenixrepo.fao.org/cdn/js/fenix-ui-map/0.1/fenix-ui-map.min.css" rel="stylesheet" />
     
+    <link href="//fenixrepo.fao.org/cdn/js/bootstrap.slider/4.9.1/dist/css/bootstrap-slider.min.css" rel="stylesheet">
 <!--
     <link href="//fenixrepo.fao.org/cdn/fenix/fenix-ui-common/0.0.1/css/fenix-style.css" rel="stylesheet" />
     <link href="../css/main.css" rel="stylesheet">
@@ -86,12 +87,15 @@ requirejs(['../js/paths'], function (paths) {
             container: '#page_region',
             onSubmit: function(selection) {
 
-                rmap.renderData(selection);
+                rmap.renderSelection(selection);
             }
         });
 
         rmap = new regionMap({
-            container: '#page_region'
+            container: '#page_region',
+            selection: {
+                year_list: '2002,2003,2004'
+            }
         });
 
     });

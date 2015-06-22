@@ -1,10 +1,10 @@
 define([
-    'jquery','underscore','bootstrap','handlebars','jstree',
+    'jquery','underscore','bootstrap','handlebars','jstree','bootstrapslider',
     'Config',
     'text!html/region/map.html',
     'fenix-ui-map'
 ], function (
-    $, _, bootstrap, Handlebars, jstree,
+    $, _, bootstrap, Handlebars, jstree, bootstrapslider,
     Config,
     tmplMap,
     FXMAP
@@ -19,14 +19,15 @@ define([
 
         self.o = _.defaults(opts, {
             selection: {
-                year_list: [],
+                year_list: '',
                 commodity_code: null,
                 trade_flow_code: null
             },
             selectedCountries: [],
             cl: {
                 indicators: null
-            }
+            },
+            onChangeYear: $.noop
         });
 
         self.map = null;
@@ -35,22 +36,38 @@ define([
         self.$container.append( Handlebars.compile(tmplMap)() );
 
         self.initMap('#map_partners_region');
+        self.initYearSlider(this.o.selection);
     };
 
-    MAP.prototype.renderData = function(selection) {
+    MAP.prototype.initYearSlider = function(selection) {
 
-/*        if(_.isArray(selection.year_list))
-            selection.year_list = selection.year_list[0];*/
+        var self = this;
 
-        wdsClient.retrieve({
-            payload: {
-                query: Config.queries.map_region,
-                queryVars: selection
-            },
-            success: function(data) {
-                console.log('RESP WDS', data);
-            }
+        var years = selection.year_list.split(','),
+            slideCfg = {
+                value: parseInt(_.first(years)),
+                min: parseInt(_.first(years)),
+                max: parseInt(_.last(years))
+            };
+
+        if(self.$slider)
+            self.$slider.slider('destroy');
+        
+        self.$slider = $('#filter_year_map', self.$container).slider(slideCfg);
+        self.$slider.on('slide slideEnabled', function(e,sel) {
+            $('#filter_year_map_label',self.container$).text( sel.value );
+            self.o.onChangeYear(sel.value);
         });
+        $('#filter_year_map_label',self.container$).text( parseInt(_.first(years)) );
+
+        console.log( self.$slider.slider() );
+        
+    };
+
+    MAP.prototype.renderSelection = function(selection) {
+
+        this.initYearSlider(selection);
+
     };
 
     MAP.prototype.initMap = function(id) {
