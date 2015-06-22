@@ -10,7 +10,7 @@ define({
 		},
 		step: 1,
 		defaultValues: {
-			min: 2002,
+			min: 2004,
 			max: 2010
 		}
 	},
@@ -18,7 +18,7 @@ define({
 		test: 'SELECT year FROM ecotrade_region_trade',
 //    "from country_stat where fertilizer = '{PRODUCT}' and country = '{COUNTRY}' and n_p = '{KIND}' ) c  join codes_elements on element = element_code WHERE value is not null ORDER BY element ASC, year ASC"
 		// REGIONS QUERIES
-		table_region : "select year, value from ecotrade.ecotrade_region_growth where year in ({year_list}) and commodity_code = '{commodity_code}}' and trade_flow_code = '{trade_flow_code}'",
+		table_region : "select year, value from ecotrade.ecotrade_region_growth where year in ({year_list}) and commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}'",
 		map_region :   "select partner_code, value from ecotrade.ecotrade_region_trade where commodity_code ='{commodity_code}}' and trade_flow_code ='{trade_flow_code}' and year = {year} order by year",
 		region_within:  "select year,partner_label,value,um from ecotrade.ecotrade_region_trade where year in ({year_list}) and partner_code in ('WTO', 'WTN') and  trade_flow_code = '{trade_flow_code}' and commodity_code ='{commodity_code}'",
 		region_year : "select year,trade_flow_label,value,um from ecotrade.ecotrade_region_trade where year in ({year_list}) and partner_code = 'WLD'  and trade_flow_code ='{trade_flow_code}' and commodity_code = '{commodity_code}' order by year",

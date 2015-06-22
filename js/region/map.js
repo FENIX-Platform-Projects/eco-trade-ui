@@ -1,15 +1,23 @@
 define([
     'jquery','underscore','bootstrap','handlebars','jstree','bootstrapslider',
     'Config',
+    'WDSClient',
     'text!html/region/map.html',
+    'text!fx-ui-table',    
     'fenix-ui-map'
 ], function (
     $, _, bootstrap, Handlebars, jstree, bootstrapslider,
     Config,
+    WDSClient,
     tmplMap,
+    tmplTable,
     FXMAP
 ) {
     'use strict';
+
+    var tableGrowth = Handlebars.compile(tmplTable)
+
+    var wdsClient = new WDSClient(Config.wds_config);
 
     function MAP(opts) {
 
@@ -37,6 +45,37 @@ define([
 
         self.initMap('#map_partners_region');
         self.initYearSlider(this.o.selection);
+        self.initGrowth(this.o.selection);
+    };
+
+
+    MAP.prototype.renderSelection = function(selection) {
+
+        this.initYearSlider(selection);
+        this.initGrowth(selection);
+    };
+
+    MAP.prototype.initGrowth = function(selection) {
+
+        var self = this;
+
+        console.log(selection);
+
+        wdsClient.retrieve({
+            payload: {
+                query: Config.queries.table_region,
+                queryVars: selection
+            },
+            success: function (data) {
+                console.log('wds',data);
+                $('#tab_growth', self.$container).html( tableGrowth({
+                    headers: ['Year','Value'],
+                    rows: data
+                }) );
+            },error: function(e) {
+                console.log('error')
+            }
+        });
     };
 
     MAP.prototype.initYearSlider = function(selection) {
@@ -54,20 +93,13 @@ define([
             self.$slider.slider('destroy');
         
         self.$slider = $('#filter_year_map', self.$container).slider(slideCfg);
+        
         self.$slider.on('slide slideEnabled', function(e,sel) {
             $('#filter_year_map_label',self.container$).text( sel.value );
             self.o.onChangeYear(sel.value);
         });
-        $('#filter_year_map_label',self.container$).text( parseInt(_.first(years)) );
 
-        console.log( self.$slider.slider() );
-        
-    };
-
-    MAP.prototype.renderSelection = function(selection) {
-
-        this.initYearSlider(selection);
-
+        $('#filter_year_map_label',self.container$).text( parseInt(_.first(years)) );        
     };
 
     MAP.prototype.initMap = function(id) {

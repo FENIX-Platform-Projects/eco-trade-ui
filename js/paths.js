@@ -30,6 +30,7 @@ define(function() {
             bootstrapslider: FX_CDN + "bootstrap.slider/4.9.1/js/bootstrap-slider",
 
             WDSClient: 'submodule/fenix-ui-common/js/WDSClient',
+            'fx-ui-table': 'submodule/fenix-ui-common/html/table.html',
 
             //fenix-ui-map
             'leaflet':                FX_CDN + 'leaflet/0.7.3/leaflet',

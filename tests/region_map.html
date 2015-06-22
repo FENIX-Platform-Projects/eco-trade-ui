@@ -71,19 +71,16 @@ requirejs(['../js/paths'], function (paths) {
 
     requirejs([
         'jquery','underscore','bootstrap','handlebars',
-        'Config',        
-        'WDSClient',
+        'Config',
         'js/region/map',
-        'js/region/filter',
+        'js/region/filter'
     ], function ($, _, bootstrap, Handlebars,
-        Config,        
-        WDSClient,
+        Config,
         regionMap,
         regionFilter
     ) {
 
-        var wdsClient = new WDSClient(Config.wds_config),
-            rmap;
+        var rmap;
 
         var filter = new regionFilter({
             container: '#page_region',
@@ -96,7 +93,10 @@ requirejs(['../js/paths'], function (paths) {
         rmap = new regionMap({
             container: '#page_region',
             selection: {
-                year_list: '2002,2003,2004'
+                year_list: _.range(Config.filter_region.defaultValues.min,Config.filter_region.defaultValues.max).join()
+            },
+            onChangeYear: function(year) {
+                console.log('MAP onChangeYear', year);
             }
         });
 
