@@ -31,14 +31,11 @@ define([
         self.$container = (self.opts.container instanceof jQuery) ? self.opts.container : $(self.opts.container);
         self.$container.append( Handlebars.compile(tmplFilter)() );
 
-      /*  self.$container.find('.filter_submit').on('click', function(e) {
+        self.$container.find('.filter_submit').on('click', function(e) {
             e.preventDefault();
-
-            console.log(self.selection);
-
             self.opts.onSubmit(self.selection);
         });
-*/
+
         self.initCommodities();
         self.initYear();
         self.initFlow();        

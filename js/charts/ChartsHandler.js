@@ -1,22 +1,32 @@
-define(['jquery', 'WDSClient', 'fx-c-c/start', 'underscore'], function ($, WDSClient, FXChart) {
+
+define(['jquery', 'underscore', 'handlebars', 'text!html/region/charts.html','WDSClient', 'fx-c-c/start'],
+    function ($,_, Handlebars, tmplCharts, WDSClient, FXChart) {
 
     'use strict'
 
-    var self = this;
     var creator;
 
-    var CONTAINERS = {
-        regionWithin: "#chart_within_eco",
-        regionBar: "#chart_commodity",
-        countryBalance: "#chart_balance",
-        countryNormal: "#chart_bars"
-    }
+    function ChartsHandler(opts) {
 
-    function ChartsHandler(queries) {
-        this.o = {};
-        this.o.queries = queries;
-        this.o.containers = CONTAINERS;
+        var self = this;
+
+        var CONTAINERS = {
+            regionWithin: "#chart_within_eco",
+            regionBar: "#chart_commodity",
+            countryBalance: "#chart_balance",
+            countryNormal: "#chart_bars"
+        }
+
+        this.o = _.defaults(opts, {
+            container: '',
+            containers: CONTAINERS,
+            queries: opts.queries 
+        });
+
         creator = new FXChart();
+
+        self.$container = (self.o.container instanceof jQuery) ? self.o.container : $(self.o.container);
+        self.$container.append( Handlebars.compile(tmplCharts)() );
 
     };
 

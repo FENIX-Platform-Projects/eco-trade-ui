@@ -10,28 +10,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
+
     <link href="//fenixrepo.fao.org/cdn/js/jquery-ui/1.10.3/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
-    <link href="//fenixrepo.fao.org/cdn/js/jquery.power.tip/1.2.0/css/jquery.powertip.css" rel="stylesheet" />
+    <link href="//fenixrepo.fao.org/cdn/js/jquery.power.tip/1.2.0/css/jquery.powertip.css" rel="stylesheet" />    
     <link href="//fenixrepo.fao.org/cdn/js/jquery.rangeslider/5.7.0/css/classic-min.css" rel="stylesheet" />
     <link href="//fenixrepo.fao.org/cdn/js/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="//fenixrepo.fao.org/cdn/js/leaflet/0.7.3/leaflet.css" rel="stylesheet" />
+    <link href="//fenixrepo.fao.org/cdn/js/jstree/3.0.8/dist/themes/default/style.min.css" rel="stylesheet" />
     <link href="//fenixrepo.fao.org/cdn/js/fenix-ui-map/0.1/fenix-ui-map.min.css" rel="stylesheet" />
-
-    <!-- FENIX style CSS -->
-    <link href="//fenixrepo.fao.org/cdn/fenix/fenix-ui-common/0.0.1/css/fenix-style.css" rel="stylesheet">
-
-    <!-- ECO TRADE CSS -->
-    <link href="css/main.css" rel="stylesheet">
+    
+<!--
+    <link href="//fenixrepo.fao.org/cdn/fenix/fenix-ui-common/0.0.1/css/fenix-style.css" rel="stylesheet" />
+    <link href="../css/main.css" rel="stylesheet">
+-->
+    <link href="../css/custom.css" rel="stylesheet">
 
 </head>
 
 <body>
 <div class="container">
 
-    <div class="row afo-tabs">
+    <div class="row">
 
         <div class="col-xs-12">
-            <ul id="catalogue_tabs" class="nav nav-tabs" role="tablist">
+            <ul class="nav nav-tabs" role="tablist">
                 <li class="active"><a href="#page_region" role="tab" data-toggle="tab">ECO Region</a></li>
                 <li><a href="#page_countries" role="tab" data-toggle="tab">ECO Countries</a></li>
             </ul>
@@ -46,44 +48,16 @@
             <div class="tab-content">
                 <div class="tab-pane active row" id="page_region">
                     REGION
-
-
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div id="chart_commodity">
-                                <!-- FILLED BY JS -->
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div id="chart_within_eco">
-                                <!-- FILLED BY JS -->
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="tab-pane row" id="page_countries">
                     COUNTRIES
-
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <p>TRADE BALANCE</p>
-                            <div id="chart_balance">
-                                <!-- FILLED BY JS -->
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <p>BAR CHART</p>
-                            <div id="chart_bars">
-                                <!-- FILLED BY JS -->
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
-    </div>            
+    </div>
     <!-- SIDEBAR -->
 </div>
+
 </body>
 
 <script src="//fenixrepo.fao.org/cdn/js/requirejs/2.1.15/require.min.js"></script>
@@ -112,26 +86,21 @@ requirejs(['../js/paths'], function (paths) {
 
         var creator = new FXChart();
         var wdsClient = new WDSClient(Config.wds_config);
+        var chartsHandler;
+
         var filter = new Filter({
-            container: '#page_region'
+            container: '#page_region',
+            onSubmit: function(selection) {
+                
+                chartsHandler.renderCharts(selection, Config.wds_config);
+
+            }
         });
 
-        var chartsHandler = new ChartsHandler(Config.queries);
-
-
-
-
-        this.$container = $('#page_region');
-        this.$container.find('.filter_submit').on('click', function(e) {
-            e.preventDefault();
-            debugger;
-            chartsHandler.renderCharts(filter.getSelection(), Config.wds_config);
-
-
+        chartsHandler = new ChartsHandler({
+            container: '#page_region',
+            queries: Config.queries
         });
-
-
-
 
     });
 });    
