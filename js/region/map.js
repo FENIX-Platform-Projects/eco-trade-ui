@@ -39,20 +39,18 @@ define([
 
     MAP.prototype.renderData = function(selection) {
 
-        selection.partner_code = '1';
-        selection.commodity_code = 'AGR';
-        selection.year_list = selection.year_list;
-        
+/*        if(_.isArray(selection.year_list))
+            selection.year_list = selection.year_list[0];*/
+
         wdsClient.retrieve({
             payload: {
-                query: Config.queries.region_year,
+                query: Config.queries.map_region,
                 queryVars: selection
             },
             success: function(data) {
                 console.log('RESP WDS', data);
             }
-        });        
-        selection = selection || this.o.selection;
+        });
     };
 
     MAP.prototype.initMap = function(id) {
