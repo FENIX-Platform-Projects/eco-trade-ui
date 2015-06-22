@@ -11,37 +11,64 @@ define([
 ) {
     'use strict';
 
-    function MAP(target, data) {
+    function MAP(opts) {
 
-        this.map = null;
-        this.o = {
+        opts = opts || {};
+
+        var self = this;
+
+        self.o = _.defaults(opts, {
+            selection: {
+                year_list: [],
+                commodity_code: null,
+                trade_flow_code: null
+            },
             selectedCountries: [],
-            data: data,
             cl: {
                 indicators: null
             }
-        };
+        });
 
-        this.$target = (target instanceof jQuery) ? target : $(target);
-        this.$target.append( Handlebars.compile(tmplMap)() );
+        self.map = null;
 
-        this.initMap('#map_partners_region');
+        self.$container = (self.o.container instanceof jQuery) ? self.o.container : $(self.o.container);
+        self.$container.append( Handlebars.compile(tmplMap)() );
+
+        self.initMap('#map_partners_region');
+    };
+
+    MAP.prototype.renderData = function(selection) {
+
+        selection.partner_code = '1';
+        selection.commodity_code = 'AGR';
+        selection.year_list = selection.year_list;
+        
+        wdsClient.retrieve({
+            payload: {
+                query: Config.queries.region_year,
+                queryVars: selection
+            },
+            success: function(data) {
+                console.log('RESP WDS', data);
+            }
+        });        
+        selection = selection || this.o.selection;
     };
 
     MAP.prototype.initMap = function(id) {
         var layers = 'fenix:gaul0_faostat_3857',
-            joinColumn = 'iso3',
+            joinColumn = 'gaul0',
             joinLabel = 'faost_n';
 
         this.map = new FM.Map(id, {
             plugins: {
                 zoomcontrol: 'topright',
                 zoomResetControl: false,
+                controlloading: false,
                 mouseposition: false,
                 disclaimerfao: false,
                 fullscreen: false,
-                geosearch: false,
-                controlloading: true
+                geosearch: false
             },
             guiController: {
                 overlay: false,
@@ -66,7 +93,7 @@ define([
             urlWMS: 'http://fenix.fao.org/geoserver',
             zindex: '550',
             style: 'highlight_polygon',
-            cql_filter: "iso3 IN ('0')",
+            cql_filter: "gaul0 IN ('0')",
             hideLayerInControllerList: true,
             lang: 'en'
         });
@@ -82,9 +109,9 @@ define([
     MAP.prototype.highlightCountries = function(countryCodes) {
 
         if (countryCodes.length > 0)
-            this.o.l_highlight_countries.layer.cql_filter = "iso3 IN ('" + countryCodes.join("','") + "')";
+            this.o.l_highlight_countries.layer.cql_filter = "gaul0 IN ('" + countryCodes.join("','") + "')";
         else
-            this.o.l_highlight_countries.layer.cql_filter = "iso3 IN ('0')";
+            this.o.l_highlight_countries.layer.cql_filter = "gaul0 IN ('0')";
 
         this.o.l_highlight_countries.redraw();
     };

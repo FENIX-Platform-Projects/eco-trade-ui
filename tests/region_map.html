@@ -79,32 +79,20 @@ requirejs(['../js/paths'], function (paths) {
         regionFilter
     ) {
 
-        var wdsClient = new WDSClient(Config.wds_config);
+        var wdsClient = new WDSClient(Config.wds_config),
+            rmap;
 
         var filter = new regionFilter({
             container: '#page_region',
             onSubmit: function(selection) {
 
-                selection.partner_code = '1';
-                selection.commodity_code = 'AGR';
-                selection.year_list = selection.year_list;
-                
-                wdsClient.retrieve({
-                    payload: {
-                        query: Config.queries.region_year,
-                        queryVars: selection
-                    },
-                    success: function(data) {
-                        console.log('RESP WDS', data);
-                    }
-                });
+                rmap.renderData(selection);
             }
         });
 
-
-        var rmapData = {};
-
-        var rmap = new regionMap('#page_region', rmapData);        
+        rmap = new regionMap({
+            container: '#page_region'
+        });
 
     });
 });    
