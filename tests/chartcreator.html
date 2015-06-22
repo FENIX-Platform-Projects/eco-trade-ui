@@ -10,20 +10,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-    <!-- Third Party CSS -->
+    <link href="//fenixrepo.fao.org/cdn/js/jquery-ui/1.10.3/jquery-ui-1.10.3.custom.min.css" rel="stylesheet" />
+    <link href="//fenixrepo.fao.org/cdn/js/jquery.power.tip/1.2.0/css/jquery.powertip.css" rel="stylesheet" />
+    <link href="//fenixrepo.fao.org/cdn/js/jquery.rangeslider/5.7.0/css/classic-min.css" rel="stylesheet" />
     <link href="//fenixrepo.fao.org/cdn/js/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- FENIX-UI-MAP CSS -->
-    <link rel="stylesheet" href="//fenixrepo.fao.org/cdn/js/leaflet/0.7.3/leaflet.css" />
-    <link rel="stylesheet" href="//fenixrepo.fao.org/cdn/js/jquery.power.tip/1.2.0/css/jquery.powertip.css" type="text/css" />
-    <link rel="stylesheet" href="//fenixrepo.fao.org/cdn/js/jquery-ui/1.10.3/jquery-ui-1.10.3.custom.min.css" />
-    <link rel="stylesheet" href="//fenixrepo.fao.org/cdn/js/fenix-ui-map/0.1/fenix-ui-map.min.css" />
+    <link href="//fenixrepo.fao.org/cdn/js/leaflet/0.7.3/leaflet.css" rel="stylesheet" />
+    <link href="//fenixrepo.fao.org/cdn/js/fenix-ui-map/0.1/fenix-ui-map.min.css" rel="stylesheet" />
 
     <!-- FENIX style CSS -->
-    <link href="http://fenixrepo.fao.org/cdn/fenix/fenix-ui-common/0.0.1/css/fenix-style.css" rel="stylesheet">
+    <link href="//fenixrepo.fao.org/cdn/fenix/fenix-ui-common/0.0.1/css/fenix-style.css" rel="stylesheet">
 
     <!-- ECO TRADE CSS -->
-    <link href="../css/main.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
 
 </head>
 
@@ -41,11 +39,14 @@
 
     </div>
 
+
+
     <div class="row">
         <div class="col-xs-12">
             <div class="tab-content">
                 <div class="tab-pane active row" id="page_region">
                     REGION
+
 
                     <div class="row">
                         <div class="col-sm-6">
@@ -98,131 +99,39 @@ requirejs(['../js/paths'], function (paths) {
         'jquery','underscore','bootstrap','handlebars',
         'WDSClient',
         'fx-c-c/start',
-        'Config'
+        'Config',
+        'js/region/filter',
+        'chartsHandler'
     ], function ($, _, bootstrap, Handlebars,
         WDSClient,
         FXChart,
-        Config
+        Config,
+        Filter,
+        ChartsHandler
     ) {
 
         var creator = new FXChart();
         var wdsClient = new WDSClient(Config.wds_config);
+        var filter = new Filter({
+            container: '#page_region'
+        });
+
+        var chartsHandler = new ChartsHandler(Config.queries);
 
 
 
-        init();
-        function init() {
-            // country
-            createChart(Config.queries.country_balance, true, true)
-            createChart(Config.queries.country_bar,true,false)
 
-            // region
-            createChart(Config.queries.region_within,false, true)
-            createChart(Config.queries.region_year,false, false)
+        this.$container = $('#page_region');
+        this.$container.find('.filter_submit').on('click', function(e) {
+            e.preventDefault();
+            debugger;
+            chartsHandler.renderCharts(filter.getSelection(), Config.wds_config);
 
-        }
+
+        });
 
 
 
-        function createChart(query, isCountry,isSpecial) {
-            var callback;
-            if (isCountry) {
-                callback = (isSpecial) ? renderCountryBalance : renderCountryNormal;
-            } else {
-                callback = (isSpecial) ? renderRegionWithin : renderRegionBar;
-            }
-            console.log(callback)
-
-
-            wdsClient.retrieve({
-                payload: {query: query,
-                   queryVars: {
-                        year_list: [2001,2002].join(),
-                        trade_flow_code:"EXP",
-                        commodity_code:"AGR",
-                    }
-                },
-                success: function (model) {
-                    creator.init({
-                        model: model,
-                        template: {},
-                        creator: {},
-                        onReady: callback
-                    });
-                }
-            });
-        }
-
-
-        function renderCountryBalance(creator) {
-            console.log(creator)
-
-            creator.render({
-                container: "#chart_balance",
-                creator: {
-                    chartObj: {
-                        chart: {
-                            type: "column"
-                        }
-                    }
-                }
-            });
-        }
-
-
-        function renderCountryNormal(creator) {
-            console.log(creator)
-            creator.render({
-                container: "#chart_bars",
-                creator: {
-                    chartObj: {
-                        chart: {
-                            type: "column"
-                        }
-                    }
-                }
-            });
-        }
-
-        function renderRegionWithin(creator) {
-            console.log(creator)
-
-            creator.render({
-                container: "#chart_within_eco",
-                adapter: {
-                    // used in init just for MATRIX and FENIX
-                    xOrder: 'asc',
-                    xDimensions: [0],
-                    valueDimensions: 2,
-                    seriesDimensions: [1]
-                }
-            });
-        }
-
-        function renderRegionBar(creator) {
-            console.log(creator)
-
-            creator.render({
-                container: "#chart_commodity",
-                adapter: {
-                    // used in init just for MATRIX and FENIX
-                    xOrder: 'asc',
-                    xDimensions: [0],
-                    valueDimensions: 2,
-                    seriesDimensions: [1]
-                },
-                creator: {
-                    chartObj: {
-                        chart: {
-                            type: "column"
-                        }
-                    }
-                }
-            });
-        }
-
-
-        console.log(FXChart)
 
     });
 });    

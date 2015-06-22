@@ -1,4 +1,4 @@
-define(['jquery', 'WDSClient', 'fx-c-c/start'], function ($, WDSClient, FXChart) {
+define(['jquery', 'WDSClient', 'fx-c-c/start', 'underscore'], function ($, WDSClient, FXChart) {
 
     'use strict'
 
@@ -25,23 +25,28 @@ define(['jquery', 'WDSClient', 'fx-c-c/start'], function ($, WDSClient, FXChart)
         this.o.queryParams = queryParameters;
         this.o.wdsConfig = wdsConfig;
 
-        // country
-        this._createChart(queries.country_balance, true, true);
-        this._createChart(queries.country_bar, true, false);
-
+        debugger;
         // region
-        this._createChart(queries.region_within, false, true);
-        this._createChart(queries.region_year, false, false);
+        this._createChart(this.o.queries.region_within, false, true);
+        this._createChart(this.o.queries.region_year, false, false);
+
+      /*  // country
+        this._createChart(this.o.queries.country_balance, true, true);
+        this._createChart(this.o.queries.country_bar, true, false);*/
+
+
     };
 
     ChartsHandler.prototype._createChart = function (query, isCountry, isSpecial) {
 
+        var self = this;
+
         var wdsClient = new WDSClient(this.o.wdsConfig);
         var callback;
         if (isCountry) {
-            callback = (isSpecial) ? self.renderCountryBalance : self.renderCountryNormal;
+            callback = (isSpecial) ? this.renderCountryBalance : this.renderCountryNormal;
         } else {
-            callback = (isSpecial) ? self.renderRegionWithin : self.renderRegionBar;
+            callback = (isSpecial) ? this.renderRegionWithin : this.renderRegionBar;
         }
         console.log(callback)
 
@@ -56,7 +61,7 @@ define(['jquery', 'WDSClient', 'fx-c-c/start'], function ($, WDSClient, FXChart)
                     model: model,
                     template: {},
                     creator: {},
-                    onReady: callback
+                    onReady: _.bind(callback, self)
                 });
             }
         });
@@ -64,6 +69,7 @@ define(['jquery', 'WDSClient', 'fx-c-c/start'], function ($, WDSClient, FXChart)
 
 
     ChartsHandler.prototype.renderCountryBalance = function (creator) {
+        debugger;
         creator.render({
             container: self.o.containers.countryBalance,
             creator: {
@@ -92,6 +98,7 @@ define(['jquery', 'WDSClient', 'fx-c-c/start'], function ($, WDSClient, FXChart)
 
 
     ChartsHandler.prototype.renderRegionBar = function (creator) {
+        var self = this;
         creator.render({
             container: self.o.containers.regionBar,
             adapter: {
@@ -113,6 +120,8 @@ define(['jquery', 'WDSClient', 'fx-c-c/start'], function ($, WDSClient, FXChart)
 
 
     ChartsHandler.prototype.renderRegionWithin = function (creator) {
+       var self = this;
+        debugger;
         creator.render({
             container: self.o.containers.regionWithin,
             adapter: {

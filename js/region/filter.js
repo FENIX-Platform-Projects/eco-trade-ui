@@ -31,14 +31,14 @@ define([
         self.$container = (self.opts.container instanceof jQuery) ? self.opts.container : $(self.opts.container);
         self.$container.append( Handlebars.compile(tmplFilter)() );
 
-        self.$container.find('.filter_submit').on('click', function(e) {
+      /*  self.$container.find('.filter_submit').on('click', function(e) {
             e.preventDefault();
 
             console.log(self.selection);
 
             self.opts.onSubmit(self.selection);
         });
-
+*/
         self.initCommodities();
         self.initYear();
         self.initFlow();        
@@ -47,7 +47,7 @@ define([
     FILTER.prototype.initFlow = function() {
 
         var self = this;
-    
+
         var radioComm$ = $('input[name="trade_flow_code"]:radio', self.$container);
         
         radioComm$.on('change', function (e, data) {
@@ -62,7 +62,7 @@ define([
     FILTER.prototype.initCommodities = function() {
 
         var self = this;
-    
+
         var treeComm$ = $('#filter_commodity_code', self.$container);
 
         self.listComm = $('#filter_commodity_code', self.$container).jstree({
@@ -83,7 +83,7 @@ define([
     FILTER.prototype.initYear = function() {
 
         var self = this;
-    
+
         var rangeMonths$ = $('#filter_year', self.$container);
 
         rangeMonths$.rangeSlider(Config.filter_region);
@@ -100,10 +100,12 @@ define([
 
 
     FILTER.prototype.getSelection = function() {
+        var self = this;
         return self.selection;
     };
 
     FILTER.prototype.reset = function() {
+        var self =this;
         self.rangeYear.reset();
     };
 
