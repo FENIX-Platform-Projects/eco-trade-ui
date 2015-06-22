@@ -1,15 +1,23 @@
 define([
-    'jquery','underscore','bootstrap','handlebars','jstree',
+    'jquery','underscore','bootstrap','handlebars','jstree','bootstrapslider',
     'Config',
+    'WDSClient',
     'text!html/region/map.html',
+    'text!fx-ui-table',    
     'fenix-ui-map'
 ], function (
-    $, _, bootstrap, Handlebars, jstree,
+    $, _, bootstrap, Handlebars, jstree, bootstrapslider,
     Config,
+    WDSClient,
     tmplMap,
+    tmplTable,
     FXMAP
 ) {
     'use strict';
+
+    var tableGrowth = Handlebars.compile(tmplTable)
+
+    var wdsClient = new WDSClient(Config.wds_config);
 
     function MAP(opts) {
 
@@ -19,14 +27,16 @@ define([
 
         self.o = _.defaults(opts, {
             selection: {
-                year_list: [],
+                year_list: '',
                 commodity_code: null,
                 trade_flow_code: null
             },
+            joinlayer: null,
             selectedCountries: [],
             cl: {
                 indicators: null
-            }
+            },
+            onChangeYear: $.noop
         });
 
         self.map = null;
@@ -35,27 +45,63 @@ define([
         self.$container.append( Handlebars.compile(tmplMap)() );
 
         self.initMap('#map_partners_region');
+        self.initYearSlider(this.o.selection);
+        self.initGrowth(this.o.selection);
     };
 
-    MAP.prototype.renderData = function(selection) {
 
-        selection.partner_code = '1';
-        selection.commodity_code = 'AGR';
-        selection.year_list = selection.year_list;
-        
+    MAP.prototype.renderSelection = function(selection) {
+
+        this.initYearSlider(selection);
+        this.initGrowth(selection);
+    };
+
+    MAP.prototype.initGrowth = function(selection) {
+
+        var self = this;
+
         wdsClient.retrieve({
             payload: {
-                query: Config.queries.region_year,
+                query: Config.queries.table_region,
                 queryVars: selection
             },
-            success: function(data) {
-                console.log('RESP WDS', data);
+            success: function (data) {
+                $('#tab_growth', self.$container).html( tableGrowth({
+                    headers: ['Year','Value'],
+                    rows: data
+                }) );
+            },error: function(e) {
+                console.log('error')
             }
-        });        
-        selection = selection || this.o.selection;
+        });
+    };
+
+    MAP.prototype.initYearSlider = function(selection) {
+
+        var self = this;
+
+        var years = selection.year_list.split(','),
+            slideCfg = {
+                value: parseInt(_.first(years)),
+                min: parseInt(_.first(years)),
+                max: parseInt(_.last(years))
+            };
+
+        if(self.$slider)
+            self.$slider.slider('destroy');
+        
+        self.$slider = $('#filter_year_map', self.$container).slider(slideCfg);
+        
+        self.$slider.on('slide slideEnabled', function(e,sel) {
+            $('#filter_year_map_label',self.container$).text( sel.value );
+            self.o.onChangeYear(sel.value);
+        });
+
+        $('#filter_year_map_label',self.container$).text( parseInt(_.first(years)) );        
     };
 
     MAP.prototype.initMap = function(id) {
+
         var layers = 'fenix:gaul0_faostat_3857',
             joinColumn = 'gaul0',
             joinLabel = 'faost_n';
@@ -87,7 +133,7 @@ define([
             lang: 'en'
         }));
 
-        this.o.l_highlight_countries = new FM.layer({
+/*        this.o.l_highlight_countries = new FM.layer({
             layers: layers,
             layertitle: '',
             urlWMS: 'http://fenix.fao.org/geoserver',
@@ -97,9 +143,9 @@ define([
             hideLayerInControllerList: true,
             lang: 'en'
         });
-        this.map.addLayer(this.o.l_highlight_countries);
+        this.map.addLayer(this.o.l_highlight_countries);*/
     };
-
+/*
     MAP.prototype.resetCountries = function() {
         this.o.selectedCountries = [];
         this.highlightCountries(this.o.selectedCountries);
@@ -114,7 +160,7 @@ define([
             this.o.l_highlight_countries.layer.cql_filter = "gaul0 IN ('0')";
 
         this.o.l_highlight_countries.redraw();
-    };
+    };*/
 
     MAP.prototype.updateJoinLayer = function(resetCountries) {
         var indicator = this.$indicator.val();

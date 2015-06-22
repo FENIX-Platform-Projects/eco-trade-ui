@@ -24,9 +24,13 @@ define(function() {
             sweetAlert:  FX_CDN + 'sweet-alert/0.4.2/sweet-alert',
             amplify:     FX_CDN + "amplify/1.1.2/amplify.min",
             jstree:      FX_CDN + "jstree/3.0.8/dist/jstree.min",
+            modernizr:   FX_CDN + "modernizr/2.8.3/dist/Modernizr.min",            
             rangeslider: FX_CDN + "jquery.rangeslider/5.7.0/jQRangeSlider-min",
+            //bootstrapslider: FX_CDN + "bootstrap.slider/4.9.1/dist/bootstrap-slider.min",
+            bootstrapslider: FX_CDN + "bootstrap.slider/4.9.1/js/bootstrap-slider",
 
             WDSClient: 'submodule/fenix-ui-common/js/WDSClient',
+            'fx-ui-table': 'submodule/fenix-ui-common/html/table.html',
 
             //fenix-ui-map
             'leaflet':                FX_CDN + 'leaflet/0.7.3/leaflet',
@@ -59,6 +63,8 @@ define(function() {
                 exports: 'Handlebars'
             },
             rangeslider: ['jquery', 'jquery-ui'],
+            bootstrapslider: ['jquery','jquery-ui','bootstrap','modernizr'],
+
             WDSClient: ['jquery'],
             'jquery-ui': ['jquery'],
             'jquery.hoverIntent': ['jquery'],

@@ -1,4 +1,14 @@
 
 section {
 	border: 1px solid red;
+	margin: 20px 0;
+}
+
+#map_partners_region,
+#tab_growth {
+	height: 300px;
+}
+
+#tab_growth {
+	overflow-y:scroll;
 }
