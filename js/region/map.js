@@ -27,11 +27,11 @@ define([
 
         self.o = _.defaults(opts, {
             selection: {
+                year: null, //single year only for map
                 year_list: '',
                 commodity_code: null,
                 trade_flow_code: null
             },
-            joinlayer: null,
             selectedCountries: [],
             cl: {
                 indicators: null
@@ -40,6 +40,7 @@ define([
         });
 
         self.map = null;
+        self.joinlayer = null;
 
         self.$container = (self.o.container instanceof jQuery) ? self.o.container : $(self.o.container);
         self.$container.append( Handlebars.compile(tmplMap)() );
@@ -49,11 +50,36 @@ define([
         self.initGrowth(this.o.selection);
     };
 
-
     MAP.prototype.renderSelection = function(selection) {
+
+        var self = this;
+
+        //if(selection.year===null)
+        selection.year = selection.year_list.split(',')[0];
+
+        this.o.selection = selection;
 
         this.initYearSlider(selection);
         this.initGrowth(selection);
+
+        wdsClient.retrieve({
+            payload: {
+                query: Config.queries.map_region,
+                queryVars: self.o.selection
+            },
+            success: function(rawData) {
+
+                console.log(rawData);
+                //var rawData = [["2","Afghanistan","512094.0","tonnes"],["4","Algeria","320.0","tonnes"], ...
+/*                var joinData = []
+                rawData.forEach(function(d){
+                    var v = {};
+                    v[d[0]] = parseFloat(d[2])
+                    joinData.push(v);
+                });
+                this.updateJoinLayer(joinData); */       
+            }
+        });
     };
 
     MAP.prototype.initGrowth = function(selection) {
@@ -70,8 +96,6 @@ define([
                     headers: ['Year','Value'],
                     rows: data
                 }) );
-            },error: function(e) {
-                console.log('error')
             }
         });
     };
@@ -84,7 +108,7 @@ define([
             slideCfg = {
                 value: parseInt(_.first(years)),
                 min: parseInt(_.first(years)),
-                max: parseInt(_.last(years))
+                max: parseInt(_.last(years)) + 1
             };
 
         if(self.$slider)
@@ -95,6 +119,7 @@ define([
         self.$slider.on('slide slideEnabled', function(e,sel) {
             $('#filter_year_map_label',self.container$).text( sel.value );
             self.o.onChangeYear(sel.value);
+            self.o.selection.year = sel.value;
         });
 
         $('#filter_year_map_label',self.container$).text( parseInt(_.first(years)) );        
@@ -102,27 +127,9 @@ define([
 
     MAP.prototype.initMap = function(id) {
 
-        var layers = 'fenix:gaul0_faostat_3857',
-            joinColumn = 'gaul0',
-            joinLabel = 'faost_n';
+        var self = this;
 
-        this.map = new FM.Map(id, {
-            plugins: {
-                zoomcontrol: 'topright',
-                zoomResetControl: false,
-                controlloading: false,
-                mouseposition: false,
-                disclaimerfao: false,
-                fullscreen: false,
-                geosearch: false
-            },
-            guiController: {
-                overlay: false,
-                baselayer: false,
-                wmsLoader: false
-            }
-        });
-        this.map.createMap();
+        this.map = new FM.Map(id, Config.map_config);
 
         this.map.addLayer(new FM.layer({
             layers: 'fenix:gaul0_line_3857',
@@ -133,68 +140,44 @@ define([
             lang: 'en'
         }));
 
-/*        this.o.l_highlight_countries = new FM.layer({
-            layers: layers,
-            layertitle: '',
-            urlWMS: 'http://fenix.fao.org/geoserver',
-            zindex: '550',
-            style: 'highlight_polygon',
-            cql_filter: "gaul0 IN ('0')",
-            hideLayerInControllerList: true,
-            lang: 'en'
-        });
-        this.map.addLayer(this.o.l_highlight_countries);*/
-    };
-/*
-    MAP.prototype.resetCountries = function() {
-        this.o.selectedCountries = [];
-        this.highlightCountries(this.o.selectedCountries);
-        this.map.map.setView([0,0], 1);
+        this.map.createMap();
     };
 
-    MAP.prototype.highlightCountries = function(countryCodes) {
+    MAP.prototype.updateJoinLayer = function(joinData) {
 
-        if (countryCodes.length > 0)
-            this.o.l_highlight_countries.layer.cql_filter = "gaul0 IN ('" + countryCodes.join("','") + "')";
-        else
-            this.o.l_highlight_countries.layer.cql_filter = "gaul0 IN ('0')";
+        var joincolumnlabel = 'areanamee',
+            joincolumn = 'gaul0';
 
-        this.o.l_highlight_countries.redraw();
-    };*/
-
-    MAP.prototype.updateJoinLayer = function(resetCountries) {
-        var indicator = this.$indicator.val();
-        // remove cached layer
-
-        this.map.removeLayer(this.o.joinlayer);
-
-        // clean joindata array
-        this.o.joinlayer.layer.joindata = [];
-
-        var codes = []
-        data.forEach(_.bind(function(d) {
-            if (d[indicator] != null && d[indicator] != 0) {
-                var p = {};
-                p[d['Country']] = d[indicator];
-                codes.push(d['Country']);
-                this.o.joinlayer.layer.joindata.push(p);
+        this.map.removeLayer(this.joinlayer);
+        this.joinlayer = new FM.layer({
+            joindata: joinData,            
+            joincolumn: joinColumn,
+            layers: 'fenix:gaul0_faostat_3857',
+            layertitle: "USD",
+            opacity: '0.8',            
+            joincolumnlabel: "USD",
+            mu: "USD",
+            legendsubtitle: "USD",
+            layertype: 'JOIN',
+            jointype: 'shaded',
+            openlegend: true,
+            defaultgfi: true,
+            colorramp: 'Greens',
+            intervals: 7,
+            lang: 'en',
+            customgfi: {
+                showpopup: false,                
+                content: {
+                    en: "{{"+ joinColumn +"}}"
+                }
+                //TODO ,callback: _.bind(this.handleCountrySelection, this)
             }
-        }, this));
+        });
+        this.map.addLayer(this.joinlayer);
 
-        if (this.o.joinlayer.layer.joindata.length > 0) {
-            this.o.joinlayer = new FM.layer(this.o.joinlayer.layer);
-            this.map.addLayer(this.o.joinlayer);
-            // TODO: add check for maximum number of codes?
-
-            // handle dropdown selection
-            if (codes.length < 200)
-                this.zoomTo(codes);
-        }
-        else {
-            // reset values
-            this.resetCountries();
-
-            swal({title: i18n.error, type: 'error', text: i18n.data_not_available_current_selection});
+        if (this.joinlayer.layer.joindata.length > 0) {
+            this.joinlayer = new FM.layer(this.joinlayer.layer);
+            this.map.addLayer(this.joinlayer);
         }
     };
 

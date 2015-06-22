@@ -3,6 +3,22 @@ define({
         datasource: 'DEMO_FENIX',
 		outputType: 'array'
 	},
+	map_config: {
+        plugins: {
+            zoomcontrol: 'topright',
+            zoomResetControl: false,
+            controlloading: false,
+            mouseposition: false,
+            disclaimerfao: false,
+            fullscreen: false,
+            geosearch: false
+        },
+        guiController: {
+            overlay: false,
+            baselayer: false,
+            wmsLoader: false
+        }
+    },
 	filter_region: {
 		bounds: {
 			min: 2000,
