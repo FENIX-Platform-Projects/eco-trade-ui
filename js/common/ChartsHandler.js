@@ -30,20 +30,23 @@ define(['jquery', 'underscore', 'handlebars', 'text!html/region/charts.html','WD
 
     };
 
-    ChartsHandler.prototype.renderCharts = function (queryParameters, wdsConfig) {
+    ChartsHandler.prototype.renderCharts = function (queryParameters, wdsConfig, isRegion) {
 
         this.o.queryParams = queryParameters;
         this.o.wdsConfig = wdsConfig;
 
-        // region
-        this._createChart(this.o.queries.region_within, false, true);
-        this._createChart(this.o.queries.region_year, false, false);
+        if(isRegion) {
+            // region
+            this._createChart(this.o.queries.region_within, false, true);
+            this._createChart(this.o.queries.region_year, false, false);
 
-        /*  // country
-         this._createChart(this.o.queries.country_balance, true, true);
-         this._createChart(this.o.queries.country_bar, true, false);*/
-
-
+            /*  // country
+             this._createChart(this.o.queries.country_balance, true, true);
+             this._createChart(this.o.queries.country_bar, true, false);*/
+        }else{
+            this._createChart(this.o.queries.country_balance, true, true);
+            this._createChart(this.o.queries.country_bar, true, false);
+        }
     };
 
     ChartsHandler.prototype._createChart = function (query, isCountry, isSpecial) {
