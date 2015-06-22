@@ -59,15 +59,12 @@ define([
 
         var self = this;
 
-        console.log(selection);
-
         wdsClient.retrieve({
             payload: {
                 query: Config.queries.table_region,
                 queryVars: selection
             },
             success: function (data) {
-                console.log('wds',data);
                 $('#tab_growth', self.$container).html( tableGrowth({
                     headers: ['Year','Value'],
                     rows: data
