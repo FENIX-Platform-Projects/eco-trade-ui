@@ -8,7 +8,9 @@ define(function() {
 
             Config:     "config/config",
             Codelists:     "config/codelists",
-            chartsHandler: "./js/charts/ChartsHandler",
+            
+            tableHandler: "./js/common/TableHandler",
+            chartsHandler: "./js/common/ChartsHandler",
 
             i18n:        FX_CDN + "requirejs/plugins/i18n/2.0.4/i18n",
             text:        FX_CDN + "requirejs/plugins/text/2.0.12/text",
