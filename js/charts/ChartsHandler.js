@@ -25,14 +25,13 @@ define(['jquery', 'WDSClient', 'fx-c-c/start', 'underscore'], function ($, WDSCl
         this.o.queryParams = queryParameters;
         this.o.wdsConfig = wdsConfig;
 
-        debugger;
         // region
         this._createChart(this.o.queries.region_within, false, true);
         this._createChart(this.o.queries.region_year, false, false);
 
-      /*  // country
-        this._createChart(this.o.queries.country_balance, true, true);
-        this._createChart(this.o.queries.country_bar, true, false);*/
+        /*  // country
+         this._createChart(this.o.queries.country_balance, true, true);
+         this._createChart(this.o.queries.country_bar, true, false);*/
 
 
     };
@@ -65,11 +64,11 @@ define(['jquery', 'WDSClient', 'fx-c-c/start', 'underscore'], function ($, WDSCl
                 });
             }
         });
-    }
+    };
 
 
     ChartsHandler.prototype.renderCountryBalance = function (creator) {
-        debugger;
+        var self = this;
         creator.render({
             container: self.o.containers.countryBalance,
             creator: {
@@ -80,10 +79,11 @@ define(['jquery', 'WDSClient', 'fx-c-c/start', 'underscore'], function ($, WDSCl
                 }
             }
         });
-    }
+    };
 
 
     ChartsHandler.prototype.renderCountryNormal = function (creator) {
+        var self = this;
         creator.render({
             container: self.o.containers.countryNormal,
             creator: {
@@ -94,7 +94,7 @@ define(['jquery', 'WDSClient', 'fx-c-c/start', 'underscore'], function ($, WDSCl
                 }
             }
         });
-    }
+    };
 
 
     ChartsHandler.prototype.renderRegionBar = function (creator) {
@@ -120,8 +120,7 @@ define(['jquery', 'WDSClient', 'fx-c-c/start', 'underscore'], function ($, WDSCl
 
 
     ChartsHandler.prototype.renderRegionWithin = function (creator) {
-       var self = this;
-        debugger;
+        var self = this;
         creator.render({
             container: self.o.containers.regionWithin,
             adapter: {
@@ -132,7 +131,7 @@ define(['jquery', 'WDSClient', 'fx-c-c/start', 'underscore'], function ($, WDSCl
                 seriesDimensions: [1]
             }
         });
-    }
+    };
 
 
     return ChartsHandler;
