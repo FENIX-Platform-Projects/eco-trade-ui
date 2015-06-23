@@ -92,14 +92,13 @@ define([
         var self = this;
         var partnerComm$ = $(self.opts.filters.partner, self.$container);
 
-        var data = self.preparePartnerData();
         self.listpartner = $(self.opts.filters.partner, self.$container).jstree({
             core: {
                 multiple: false,
                 themes: {
                     icons: false
                 },
-                data: data
+                data: Codelists.countries
             },
             plugins: ["wholerow", "checkbox", "search"],
             "search": {
@@ -112,17 +111,6 @@ define([
     }
 
 
-    FILTER.prototype.preparePartnerData = function() {
-        var result = [];
-        var data  =Codelists.countries
-        for(var key in data){
-            result.push({
-                id: key,
-                text: data[key]
-            })
-        }
-        return result;
-    }
 
     FILTER.prototype.initYear = function() {
 

@@ -33,7 +33,12 @@ define(['jquery', 'underscore', 'handlebars', 'text!html/region/charts.html',
     ChartsHandler.prototype.renderCharts = function (queryParameters, wdsConfig, isCountry) {
         var self = this;
         var tmplCharts = (isCountry)? tmplChartsCountry: tmplChartsRegion;
-        self.$container.append( Handlebars.compile(tmplCharts)() );
+        if(self.$templateCharts)
+            self.$templateCharts.remove();
+
+        self.$templateCharts = $(Handlebars.compile(tmplCharts)())
+        self.$container.append(self.$templateCharts);
+
 
         this.o.queryParams = queryParameters;
         this.o.wdsConfig = wdsConfig;

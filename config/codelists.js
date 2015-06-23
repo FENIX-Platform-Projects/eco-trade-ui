@@ -8,15 +8,15 @@ define({
         IMP: "Import",
         EXP: "Export"
     },
-    countries: {
-        "1": "Afghanistan",
-        "19": "Azerbaijan",
-        "117": "Iran",
-        "132": "Kazakhstan",
-        "138": "Kyrgyzstan",
-        "188": "Pakistan",
-        "239": "Tajikistan",
-        "249": "Turkey",
-        "250": "Turkmenistan"
-    }
+    countries: [
+        {id: "1", text: "Afghanistan", state: {selected: true}},
+        {id: "19", text: "Azerbaijan"},
+        {id: "117", text: "Iran"},
+        {id: "132", text: "Kazakhstan"},
+        {id: "138", text: "Kyrgyzstan"},
+        {id: "188", text: "Pakistan"},
+        {id: "239", text: "Tajikistan"},
+        {id: "249", text: "Turkey"},
+        {id: "250", text: "Turkmenistan"}
+    ]
 })

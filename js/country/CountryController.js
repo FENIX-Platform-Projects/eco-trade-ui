@@ -32,7 +32,6 @@ define([
             filters: self.$containers.filters,
             isCountry: true,
             onSubmit: function (selection) {
-                debugger;
 
                 /*
                                 rmap.renderSelection(selection);
