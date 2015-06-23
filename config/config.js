@@ -40,7 +40,7 @@ define({
         // COUNTRY QUERIES
         country_balance: "select year,commodity_label,value,um from ecotrade.ecotrade_country_tradebalance where year in ({year_list}) and partner_code = '{partner_code}' and commodity_code = '{commodity_code}'",
         country_bar: "select year,partner_label, value, um from ecotrade.ecotrade_country_trade where year in ({year_list}) and partner_code = '{partner_code}' and commodity_code = '{commodity_code}'",
-        map_country: "select * from ecotrade.ecotrade_country_trade where year = {year} and partner_code = '{partner_code}' and commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}' ",
+        map_country: "select partner_code, value from ecotrade.ecotrade_country_trade where year = {year} and partner_code = '{partner_code}' and commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}' ",
         map_partner:
         "select reporter_code, reporter_label, value from (" +
         "select distinct on(reporter_code, reporter_label)reporter_code, reporter_label, value from(" +
