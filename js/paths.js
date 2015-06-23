@@ -39,7 +39,7 @@ define(function() {
             'jquery.hoverIntent':     FX_CDN + 'jquery.hoverIntent/1.8.0/jquery.hoverIntent.min',
             'import-dependencies':    FX_CDN + 'FENIX/utils/import-dependencies-1.0',
             'jquery.i18n.properties': FX_CDN + 'jquery/1.0.9/jquery.i18n.properties-min',
-            'fenix-ui-map':           'submodule/fenix-ui-map/dist/fenix-ui-map.min',
+            'fenix-ui-map':           'submodule/fenix-ui-map/dist/fenix-ui-map.src',
             'fenix-ui-map-config':    'submodule/fenix-ui-map/dist/fenix-ui-map-config',
 
             //fenix-ui-chart-creator

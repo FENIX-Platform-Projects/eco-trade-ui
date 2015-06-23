@@ -50,41 +50,10 @@ define([
         self.initGrowth(this.o.selection);
     };
 
-    MAP.prototype.renderSelection = function(selection) {
-
-        var self = this;
-
-        //if(selection.year===null)
-        selection.year = selection.year_list.split(',')[0];
-
-        this.o.selection = selection;
-
-        this.initYearSlider(selection);
-        this.initGrowth(selection);
-
-        wdsClient.retrieve({
-            payload: {
-                query: Config.queries.map_region,
-                queryVars: self.o.selection
-            },
-            success: function(rawData) {
-
-                console.log(rawData);
-                //var rawData = [["2","Afghanistan","512094.0","tonnes"],["4","Algeria","320.0","tonnes"], ...
-/*                var joinData = []
-                rawData.forEach(function(d){
-                    var v = {};
-                    v[d[0]] = parseFloat(d[2])
-                    joinData.push(v);
-                });
-                this.updateJoinLayer(joinData); */       
-            }
-        });
-    };
-
     MAP.prototype.initGrowth = function(selection) {
 
         var self = this;
+
 
         wdsClient.retrieve({
             payload: {
@@ -143,42 +112,72 @@ define([
         this.map.createMap();
     };
 
+    MAP.prototype.renderSelection = function(selection) {
+
+        var self = this;
+
+        //if(selection.year===null)
+        selection.year = selection.year_list.split(',')[0];
+
+        self.o.selection = selection;
+
+        self.initYearSlider(selection);
+        self.initGrowth(selection);
+
+        wdsClient.retrieve({
+            payload: {
+                query: Config.queries.map_region,
+                queryVars: self.o.selection
+            },
+            success: function(rawData) {
+                //var rawData = [["2","Afghanistan","512094.0","tonnes"],["4","Algeria","320.0","tonnes"], ...
+                var joinData = []
+                rawData.forEach(function(d){
+                    var v = {};
+                    v[d[0]] = parseFloat(d[1])
+                    joinData.push(v);
+                });
+
+                console.log(joinData);
+                
+                self.updateJoinLayer(joinData);
+            }
+        });
+    };
+
     MAP.prototype.updateJoinLayer = function(joinData) {
 
-        var joincolumnlabel = 'areanamee',
-            joincolumn = 'gaul0';
+        var joinColumnlabel = 'areanamee',
+            joinColumn = 'gaul0';
+        
+        if(this.joinlayer)
+            this.map.removeLayer(this.joinlayer);
 
-        this.map.removeLayer(this.joinlayer);
         this.joinlayer = new FM.layer({
             joindata: joinData,            
             joincolumn: joinColumn,
+            joincolumnlabel: joinColumnlabel,
             layers: 'fenix:gaul0_faostat_3857',
             layertitle: "USD",
             opacity: '0.8',            
-            joincolumnlabel: "USD",
             mu: "USD",
             legendsubtitle: "USD",
-            layertype: 'JOIN',
-            jointype: 'shaded',
+            layertype: "JOIN",
+            jointype: "shaded",
             openlegend: true,
             defaultgfi: true,
-            colorramp: 'Greens',
+            colorramp: "Greens",
             intervals: 7,
-            lang: 'en',
+            lang: "en",            
             customgfi: {
-                showpopup: false,                
+                showpopup: false,             
                 content: {
-                    en: "{{"+ joinColumn +"}}"
+                    en: "{{"+joinColumn+"}}"
                 }
                 //TODO ,callback: _.bind(this.handleCountrySelection, this)
             }
         });
         this.map.addLayer(this.joinlayer);
-
-        if (this.joinlayer.layer.joindata.length > 0) {
-            this.joinlayer = new FM.layer(this.joinlayer.layer);
-            this.map.addLayer(this.joinlayer);
-        }
     };
 
     MAP.prototype.zoomTo = function(codes) {
