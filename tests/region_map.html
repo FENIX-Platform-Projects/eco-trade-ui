@@ -85,7 +85,6 @@ requirejs(['../js/paths'], function (paths) {
         var filter = new regionFilter({
             container: '#page_region',
             onSubmit: function(selection) {
-
                 rmap.renderSelection(selection);
             }
         });
@@ -98,6 +97,12 @@ requirejs(['../js/paths'], function (paths) {
             onChangeYear: function(year) {
                 console.log('MAP onChangeYear', year);
             }
+        });
+
+        rmap.renderSelection({
+            year_list: "2004,2005,2006,2007,2008,2009,2010",
+            commodity_code: "AGR",
+            trade_flow_code: "EXP"
         });
 
     });
