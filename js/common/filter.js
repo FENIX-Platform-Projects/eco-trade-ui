@@ -49,9 +49,7 @@ define([
             self.initYear();
             self.initFlow();
         }
-
     };
-
 
 
     FILTER.prototype.initFlow = function() {
@@ -148,7 +146,6 @@ define([
         self.selection.trade_flow_code === 'IMP' ?
             self.radioComm$[1].checked = true:
             self.radioComm$[0].checked = true;
-
     }
 
     return FILTER;

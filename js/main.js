@@ -36,7 +36,6 @@ requirejs(['./paths'], function (paths) {
 
                     if(!countryController) {
                         countryController = new CountryController(containers.country)
-                        alert('country')
                         countryController.init();
                     }else{
                         countryController.reinitFilterValues();

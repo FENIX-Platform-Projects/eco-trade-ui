@@ -52,14 +52,9 @@ define([
             container: self.$containers.container,
             queries: Config.queries
         });
-
-        
-
-
     };
 
     RegionController.prototype.reinitFilterValues = function(){
-        debugger;
         this.filter.reinitTradeFlowRadio();
     }
 
