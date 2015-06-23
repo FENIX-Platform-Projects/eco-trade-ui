@@ -14,14 +14,22 @@ define({
             geosearch: false
         },
         guiController: {
-            overlay: false,
+            overlay: true,
             baselayer: false,
             wmsLoader: false
         }
     },
     legend_config: {
-        "IMP": "blues",
-        "EXP": "greens"
+        IMP: {
+            title: "Import",
+            colors: "blues",
+            ranges: [107, 5575, 2087315, 250321939, 10722485508, 10722485508]
+        },
+        EXP: {
+            title: "Export",
+            colors: "greens",
+            ranges: [211, 11324, 1625757, 190147320, 7349781019, 7349781019]
+        }
     },
     rangeslider_config: {
         bounds: {

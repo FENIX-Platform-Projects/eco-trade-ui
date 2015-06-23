@@ -53,7 +53,6 @@ define([
         self.initGrowth(this.o.selection);
     };
 
-
     MAP.prototype.initPartners = function(selection) {
 
         var self = this;
@@ -64,7 +63,11 @@ define([
                 queryVars: selection
             },
             success: function (data) {
+
+                console.log(data);
                 
+                //TODO use simple table
+
                 $('#filter_partner_code', self.$container).jstree({
                     plugins: ["wholerow", "checkbox"],
                     core: {
@@ -116,12 +119,12 @@ define([
         
         self.$slider = $('#filter_year_map', self.$container).slider(slideCfg);
         
-        self.$slider.on('slide slideEnabled', _.debounce(function(e,sel) {
+        self.$slider.on('slide slideEnabled', function(e,sel) {
             $('#filter_year_map_label',self.container$).text('Year '+ sel.value );
             self.o.onChangeYear(sel.value);
             self.o.selection.year = sel.value;
             self.updateLayer(self.o.selection);
-        }, 300));
+        });
 
         var label = 'Year '+_.first(years)+'-'+_.last(years);
         $('#filter_year_map_label',self.container$).text( label );
@@ -180,19 +183,20 @@ define([
                     self.map.removeLayer(self.joinlayer);
 
                 self.joinlayer = new FM.layer({
+                    ranges: Config.legend_config[ selection.trade_flow_code ].ranges,
                     joindata: joinData,            
                     joincolumn: joinColumn,
                     joincolumnlabel: joinColumnlabel,
                     layers: 'fenix:gaul0_faostat_3857',
-                    layertitle: "USD",
-                    opacity: '0.8',            
-                    mu: "USD",
-                    legendsubtitle: "USD",
+                    layertitle: Config.legend_config[ selection.trade_flow_code ].title,
+                    opacity: 1,            
+                    mu: "US$",
+                    legendsubtitle: "",
                     layertype: "JOIN",
                     jointype: "shaded",
                     openlegend: true,
                     defaultgfi: true,
-                    colorramp: Config.legend_config[ selection.trade_flow_code ],
+                    colorramp: Config.legend_config[ selection.trade_flow_code ].colors,
                     intervals: 7,
                     lang: "en",            
                     customgfi: {
