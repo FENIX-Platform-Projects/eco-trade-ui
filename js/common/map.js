@@ -66,9 +66,20 @@ define([
 
                 console.log(data);
                 
-                //TODO use simple table
+/*                wdsClient.retrieve({
+                    payload: {
+                        query: Config.queries.table_region,
+                        queryVars: selection
+                    },
+                    success: function (data) {
+                        $('#tab_growth', self.$container).html( tableGrowth({
+                            headers: ['Period','Growth Rate'],
+                            rows: data
+                        }) );
+                    }
+                });*/
 
-                $('#filter_partner_code', self.$container).jstree({
+/*                $('#filter_partner_code', self.$container).jstree({
                     plugins: ["wholerow", "checkbox"],
                     core: {
                         multiple: false,
@@ -80,7 +91,7 @@ define([
                 }).on('changed.jstree', function (e, data) {
                     e.preventDefault();
                     //self.o.selection.commodity_code = data.selected[0];
-                });
+                });*/
             }
         });
     };
@@ -116,14 +127,27 @@ define([
 
         if(self.$slider)
             self.$slider.slider('destroy');
-        
-        self.$slider = $('#filter_year_map', self.$container).slider(slideCfg);
-        
-        self.$slider.on('slide slideEnabled', function(e,sel) {
+
+/*        self.$slider = $('#filter_year_map', self.$container).slider(slideCfg);
+        self.$slider.on('slideStart', function(e, sel) {
             $('#filter_year_map_label',self.container$).text('Year '+ sel.value );
-            self.o.onChangeYear(sel.value);
-            self.o.selection.year = sel.value;
+            self.o.onChangeYear( sel.value );
+            self.o.selection.year = sel.value;  
             self.updateLayer(self.o.selection);
+        });
+*/
+        
+        $('#filter_partner_code', self.container$).on('change', function (e) {
+            e.preventDefault();
+            
+            var val = $('option:selected',this).text();
+            
+            console.log(val);
+
+            //self.o.onChangeYear( val );
+            self.o.selection.year = val;  
+            self.updateLayer(self.o.selection);
+
         });
 
         var label = 'Year '+_.first(years)+'-'+_.last(years);
@@ -157,9 +181,9 @@ define([
         if(self.o.selection.year == null)
             self.o.selection.year = selection.year_list.split(',')[0];
 
-        self.initYearSlider(selection);
-        self.initGrowth(selection);
-        self.updateLayer(selection);
+        //self.initYearSlider(self.o.selection);
+        self.initGrowth(self.o.selection);
+        self.updateLayer(self.o.selection);
     };
 
     MAP.prototype.updateLayer = function(selection) {
@@ -178,9 +202,12 @@ define([
                     joinData = _.map(rawData, function(v) {
                         return _.object([v[0]], [v[1]]);
                     });
-                
-                if(self.joinlayer)
-                    self.map.removeLayer(self.joinlayer);
+        
+        if(self.joinlayer) {
+            console.log('updateLayer',self.map.map.hasLayer(self.joinlayer.leafletLayer));
+            
+            self.map.removeLayer(self.joinlayer);
+        }
 
                 self.joinlayer = new FM.layer({
                     ranges: Config.legend_config[ selection.trade_flow_code ].ranges,
