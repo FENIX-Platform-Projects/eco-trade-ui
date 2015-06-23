@@ -14,8 +14,8 @@ define([
 
     'use strict'
 
-    function RegionController(container){
-        this.$container = container;
+    function RegionController(regionContainers){
+        this.$containers = regionContainers;
     };
 
     RegionController.prototype.init = function(){
@@ -25,16 +25,19 @@ define([
         var rmap, chartsHandler
 
         var filter = new Filter({
-            container: self.$container,
+            container: self.$containers.container,
+            filters: self.$containers.filters,
+            isCountry: false,
             onSubmit: function (selection) {
+                debugger;
                 rmap.renderSelection(selection);
                 chartsHandler.renderCharts(selection, Config.wds_config, true);
-                $(self.$container+' section').show();
+                $(self.$containers.container+' section').show();
             }
         });
 
         rmap = new regionMap({
-            container: self.$container,
+            container: self.$containers.container,
             selection: {
                 year_list: _.range(Config.filter_region.defaultValues.min, Config.filter_region.defaultValues.max).join()
             },
@@ -44,7 +47,7 @@ define([
         });
 
         chartsHandler = new ChartsHandler({
-            container: self.$container,
+            container: self.$containers.container,
             queries: Config.queries
         });
 

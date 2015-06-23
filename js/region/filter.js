@@ -57,12 +57,19 @@ define([
 
 
     FILTER.prototype.initCommodities = function() {
-
         var self = this;
+        if(self.opts.isCountry){
+            self.initCountryCommodities(self)
+        }else{
+            self.initRegionCommodities(self)
+        }
+    };
 
-        var treeComm$ = $('#filter_commodity_code', self.$container);
+    FILTER.prototype.initRegionCommodities = function(self) {
 
-        self.listComm = $('#filter_commodity_code', self.$container).jstree({
+        var treeComm$ = $(self.opts.filters.commodity, self.$container);
+
+        self.listComm = $(self.opts.filters.commodity, self.$container).jstree({
             plugins: ["wholerow", "checkbox"],
             core: {
                 multiple: false,
@@ -75,13 +82,47 @@ define([
             e.preventDefault();
             self.selection.commodity_code = data.selected[0];
         });
-    };
+    }
+
+    FILTER.prototype.initCountryCommodities = function(self) {
+        var treeComm$ = $(self.opts.filters.commodity, self.$container);
+
+        self.listComm = $(self.opts.filters.commodity, self.$container).jstree({
+
+            core: {
+                multiple: false,
+                themes: {
+                    icons: false
+                },
+                data: self.preparePartnerData()
+            },
+            plugins: ["wholerow", "checkbox", "search"],
+            "search": {
+                show_only_matches: true,
+            }
+        }).on('changed.jstree', function (e, data) {
+            e.preventDefault();
+            self.selection.commodity_code = data.selected[0];
+        });
+    }
+
+    FILTER.prototype.preparePartnerData = function() {
+        var result = [];
+        var data  =Codelists.countries
+        for(var key in data){
+            result.push({
+                id: key,
+                text: data[key]
+            })
+        }
+        return result;
+    }
 
     FILTER.prototype.initYear = function() {
 
         var self = this;
 
-        var rangeMonths$ = $('#filter_year', self.$container);
+        var rangeMonths$ = $(self.opts.filters.year, self.$container);
 
         rangeMonths$.rangeSlider(Config.filter_region);
 

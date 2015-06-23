@@ -14,9 +14,45 @@ define([
 
     'use strict'
 
-    function CountryController(){};
+    function CountryController(containers){
+        this.$containers = containers;
+    };
 
-    CountryController.prototype.init = function(){};
+    CountryController.prototype.init = function(){
+        var self = this;
+
+        var rmap, chartsHandler
+
+        var filter = new Filter({
+            container: self.$containers.container,
+            filters: self.$containers.filters,
+            isCountry: true,
+            onSubmit: function (selection) {
+/*
+                rmap.renderSelection(selection);
+*/
+                chartsHandler.renderCharts(selection, Config.wds_config, true);
+                $(self.$containers.container+' section').show();
+            }
+        });
+
+     /*   rmap = new regionMap({
+            container: self.$containers.container,
+            selection: {
+                year_list: _.range(Config.filter_region.defaultValues.min, Config.filter_region.defaultValues.max).join()
+            },
+            onChangeYear: function (year) {
+                console.log('MAP onChangeYear', year);
+            }
+        });
+*/
+        chartsHandler = new ChartsHandler({
+            container: self.$containers.container,
+            queries: Config.queries
+        });
+
+        $('section').not('#filter').hide();
+    };
 
 
     return CountryController;

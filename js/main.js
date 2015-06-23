@@ -6,13 +6,18 @@ requirejs(['./paths'], function (paths) {
     requirejs.config(paths);
 
     requirejs([
+        'config/configContainer',
         'js/region/RegionController',
-        'js/country/CountryController'
+        'js/country/CountryController',
 
-    ], function (RegionController, CountryController) {
+    ], function (containers,
+        RegionController, CountryController) {
 
-        var regionController = new RegionController('#page_region')
+        var regionController = new RegionController(containers.region)
         regionController.init();
+      /*  var countryController = new CountryController(containers.country)
+        countryController.init();*/
+
 
 
         /*
