@@ -6,19 +6,38 @@ requirejs(['./paths'], function (paths) {
     requirejs.config(paths);
 
     requirejs([
+        'jquery','underscore',
         'config/configContainer',
         'js/region/RegionController',
         'js/country/CountryController',
 
-    ], function (containers,
+    ], function ($, _, 
+        containers,
         RegionController, CountryController) {
 
-        var regionController = new RegionController(containers.region)
-        regionController.init();
-        var countryController = new CountryController(containers.country)
-        countryController.init();
+        var region = _.once(function() {
+            var regionController = new RegionController(containers.region)
+            regionController.init();                    
+        });
 
+        var country = _.once(function() {
+            var countryController = new CountryController(containers.country)
+            countryController.init();                    
+        });
 
+        $('#trade_tabs').find('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+            switch($(e.target).attr('href'))
+            {
+                case '#page_region':
+                    region();
+                break;
+                case '#page_countries':
+                    country();
+                break;
+            }
+        });
+        region();
 
         /*
 

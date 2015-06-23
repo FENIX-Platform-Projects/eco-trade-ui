@@ -2,7 +2,7 @@ define({
     region: {
         container: '#page_region',
         filters: {
-            year: '#filter_year',
+            year: '#filter_year_region',
             trade_flow: '#filter_trade_flow_code',
             commodity: '#filter_commodity_code'
         }

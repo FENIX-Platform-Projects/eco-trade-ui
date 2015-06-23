@@ -26,5 +26,5 @@ section {
 	min-height: 182px;
 }
 #filter_country{
-	overflow-y: auto;
+/*	overflow-y: auto;*/
 }

@@ -19,7 +19,7 @@ define({
             wmsLoader: false
         }
     },
-    filter_region: {
+    rangeslider_config: {
         bounds: {
             min: 2000,
             max: 2014

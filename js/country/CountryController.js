@@ -47,7 +47,7 @@ define([
      /*   rmap = new regionMap({
             container: self.$containers.container,
             selection: {
-                year_list: _.range(Config.filter_region.defaultValues.min, Config.filter_region.defaultValues.max).join()
+                year_list: _.range(Config.rangeslider_config.defaultValues.min, Config.rangeslider_config.defaultValues.max).join()
             },
             onChangeYear: function (year) {
                 console.log('MAP onChangeYear', year);

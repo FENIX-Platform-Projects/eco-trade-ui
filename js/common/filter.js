@@ -30,7 +30,7 @@ define([
             trade_flow_code: null
         };
 
-        var tmplFilter = (self.opts.isCountry)? tmplFilterCountry: tmplFilterRegion;
+        var tmplFilter = (self.opts.isCountry)? tmplFilterCountry : tmplFilterRegion;
         self.$container = (self.opts.container instanceof jQuery) ? self.opts.container : $(self.opts.container);
         self.$container.append( Handlebars.compile(tmplFilter)() );
 
@@ -73,7 +73,7 @@ define([
         var self = this;
         var treeComm$ = $(self.opts.filters.commodity, self.$container);
 
-        self.listComm = $(self.opts.filters.commodity, self.$container).jstree({
+        self.listComm = treeComm$.jstree({
             plugins: ["wholerow", "checkbox"],
             core: {
                 multiple: false,
@@ -128,18 +128,18 @@ define([
 
         var self = this;
 
-        var rangeMonths$ = $(self.opts.filters.year, self.$container);
+        self.rangeMonths$ = $(self.opts.filters.year, self.$container);
 
-        rangeMonths$.rangeSlider(Config.filter_region);
+        self.rangeMonths$.rangeSlider(Config.rangeslider_config);
 
-        var vals = rangeMonths$.rangeSlider("values");
+        var vals = self.rangeMonths$.rangeSlider("values");
         self.selection.year_list = _.range(vals.min, vals.max+1).join();
 
-        rangeMonths$.on('valuesChanged', function(e, sel) {
+        self.rangeMonths$.on('valuesChanged', function(e, sel) {
             self.selection.year_list = _.range(sel.values.min, sel.values.max+1).join();
         });
 
-        self.rangeYear = $("#range").data("ionRangeSlider");
+        self.rangeYear = self.rangeMonths$.data("ionRangeSlider");
     };
 
 
