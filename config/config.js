@@ -50,8 +50,11 @@ define({
             "where year in ({year_list})" +
             "and partner_code = '{partner_code}'" +
             "and commodity_code = '{commodity_code}'" +
+            "and trade_flow_code = '{trade_flow_code}'"+
             "group by value, reporter_code,reporter_label" +
             "order by reporter_code,value DESC) as v) as g" +
-            "order by g.value desc "
+            "order by g.value desc ",
+        map_subcommodities:"select reporter_label, value from ecotrade.ecotrade_country_subelements where year= {year} and partner_code ='{partner_code}' and reporter_code = '{reporter_code}' and " +
+        "commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}' order by value"
     }
 });
