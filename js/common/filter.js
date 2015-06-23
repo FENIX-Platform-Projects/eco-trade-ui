@@ -2,12 +2,14 @@ define([
     'jquery','underscore','bootstrap','handlebars','jstree','rangeslider',
     'Config',
     'Codelists',
-    'text!html/region/filter.html',
+    'text!../../html/region/filter.html',
+    'text!../../html/country/filter.html'
 ], function (
     $, _, bootstrap, Handlebars, jstree, rangeslider,
     Config,
     Codelists,
-    tmplFilter
+    tmplFilterRegion,
+    tmplFilterCountry
 ) {
     'use strict';
 
@@ -28,6 +30,7 @@ define([
             trade_flow_code: null
         };
 
+        var tmplFilter = (self.opts.isCountry)? tmplFilterCountry: tmplFilterRegion;
         self.$container = (self.opts.container instanceof jQuery) ? self.opts.container : $(self.opts.container);
         self.$container.append( Handlebars.compile(tmplFilter)() );
 
@@ -36,10 +39,20 @@ define([
             self.opts.onSubmit(self.selection);
         });
 
-        self.initCommodities();
-        self.initYear();
-        self.initFlow();        
+        if(self.opts.isCountry) {
+            self.initPartners();
+            self.initCommodities();
+            self.initYear();
+            self.initFlow();
+        }else{
+            self.initCommodities();
+            self.initYear();
+            self.initFlow();
+        }
+
     };
+
+
 
     FILTER.prototype.initFlow = function() {
 
@@ -58,15 +71,6 @@ define([
 
     FILTER.prototype.initCommodities = function() {
         var self = this;
-        if(self.opts.isCountry){
-            self.initCountryCommodities(self)
-        }else{
-            self.initRegionCommodities(self)
-        }
-    };
-
-    FILTER.prototype.initRegionCommodities = function(self) {
-
         var treeComm$ = $(self.opts.filters.commodity, self.$container);
 
         self.listComm = $(self.opts.filters.commodity, self.$container).jstree({
@@ -82,29 +86,31 @@ define([
             e.preventDefault();
             self.selection.commodity_code = data.selected[0];
         });
-    }
+    };
 
-    FILTER.prototype.initCountryCommodities = function(self) {
-        var treeComm$ = $(self.opts.filters.commodity, self.$container);
+    FILTER.prototype.initPartners = function() {
+        var self = this;
+        var partnerComm$ = $(self.opts.filters.partner, self.$container);
 
-        self.listComm = $(self.opts.filters.commodity, self.$container).jstree({
-
+        var data = self.preparePartnerData();
+        self.listpartner = $(self.opts.filters.partner, self.$container).jstree({
             core: {
                 multiple: false,
                 themes: {
                     icons: false
                 },
-                data: self.preparePartnerData()
+                data: data
             },
             plugins: ["wholerow", "checkbox", "search"],
             "search": {
-                show_only_matches: true,
+                show_only_matches: true
             }
         }).on('changed.jstree', function (e, data) {
             e.preventDefault();
             self.selection.commodity_code = data.selected[0];
         });
     }
+
 
     FILTER.prototype.preparePartnerData = function() {
         var result = [];

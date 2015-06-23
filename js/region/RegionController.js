@@ -2,7 +2,7 @@ define([
     'jquery', 'underscore', 'bootstrap', 'handlebars',
     'Config',
     'WDSClient',
-    './filter',
+    './../common/filter',
     './map',
     '../common/ChartsHandler'
 ], function ($, _, bootstrap, Handlebars,
@@ -24,6 +24,8 @@ define([
 
         var rmap, chartsHandler
 
+        console.log(self.$containers.container);
+        $('section', $(self.$containers.container)).show();
         var filter = new Filter({
             container: self.$containers.container,
             filters: self.$containers.filters,
@@ -32,7 +34,6 @@ define([
                 debugger;
                 rmap.renderSelection(selection);
                 chartsHandler.renderCharts(selection, Config.wds_config, true);
-                $(self.$containers.container+' section').show();
             }
         });
 
@@ -51,7 +52,9 @@ define([
             queries: Config.queries
         });
 
-        $('section').not('#filter').hide();
+/*
+        $('section').not('#filter_region').hide();
+*/
     };
 
     return RegionController;

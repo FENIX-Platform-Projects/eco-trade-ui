@@ -15,8 +15,8 @@ requirejs(['./paths'], function (paths) {
 
         var regionController = new RegionController(containers.region)
         regionController.init();
-      /*  var countryController = new CountryController(containers.country)
-        countryController.init();*/
+        var countryController = new CountryController(containers.country)
+        countryController.init();
 
 
 

@@ -2,14 +2,18 @@ define([
     'jquery', 'underscore', 'bootstrap', 'handlebars',
     'Config',
     'WDSClient',
-    'js/region/filter',
-    'js/region/map',
-    'chartsHandler'
+    './../common/filter',
+/*
+    './map',
+*/
+    '../common/ChartsHandler'
 ], function ($, _, bootstrap, Handlebars,
              Config,
              WDSClient,
              Filter,
+/*
              regionMap,
+*/
              ChartsHandler) {
 
     'use strict'
@@ -32,7 +36,9 @@ define([
                 rmap.renderSelection(selection);
 */
                 chartsHandler.renderCharts(selection, Config.wds_config, true);
+/*
                 $(self.$containers.container+' section').show();
+*/
             }
         });
 
@@ -51,7 +57,9 @@ define([
             queries: Config.queries
         });
 
-        $('section').not('#filter').hide();
+/*
+        $('section').not('#filter_country').hide();
+*/
     };
 
 

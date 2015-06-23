@@ -7,7 +7,8 @@ section {
 }
 
 #map_partners_region,
-#tab_growth {
+#tab_growth,
+#filter_country{
 	height: 300px;
 }
 
@@ -23,4 +24,7 @@ section {
 	opacity: 0.8;
 	min-width:104px;
 	min-height: 182px;
+}
+#filter_country{
+	overflow-y: auto;
 }

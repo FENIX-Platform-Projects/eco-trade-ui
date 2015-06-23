@@ -26,7 +26,6 @@ define(['jquery', 'underscore', 'handlebars', 'text!html/region/charts.html','WD
         creator = new FXChart();
 
         self.$container = (self.o.container instanceof jQuery) ? self.o.container : $(self.o.container);
-        debugger;
         self.$container.append( Handlebars.compile(tmplCharts)() );
 
     };
@@ -112,7 +111,6 @@ define(['jquery', 'underscore', 'handlebars', 'text!html/region/charts.html','WD
 
 
     ChartsHandler.prototype.renderRegionBar = function (creator) {
-        debugger;
         var self = this;
         creator.render({
             container: self.o.containers.regionBar,
