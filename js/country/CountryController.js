@@ -32,9 +32,11 @@ define([
             filters: self.$containers.filters,
             isCountry: true,
             onSubmit: function (selection) {
-/*
-                rmap.renderSelection(selection);
-*/
+                debugger;
+
+                /*
+                                rmap.renderSelection(selection);
+                */
                 chartsHandler.renderCharts(selection, Config.wds_config, true);
 /*
                 $(self.$containers.container+' section').show();

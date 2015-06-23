@@ -107,7 +107,7 @@ define([
             }
         }).on('changed.jstree', function (e, data) {
             e.preventDefault();
-            self.selection.commodity_code = data.selected[0];
+                self.selection.reporter_code = data.selected[0];
         });
     }
 

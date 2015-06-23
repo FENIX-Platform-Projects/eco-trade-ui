@@ -23,17 +23,16 @@ define([
         var self = this;
 
         var rmap, chartsHandler
-
+        $(self.$containers.container).show()
         console.log(self.$containers.container);
-        $('section', $(self.$containers.container)).show();
+
         var filter = new Filter({
             container: self.$containers.container,
             filters: self.$containers.filters,
             isCountry: false,
             onSubmit: function (selection) {
-                debugger;
                 rmap.renderSelection(selection);
-                chartsHandler.renderCharts(selection, Config.wds_config, true);
+                chartsHandler.renderCharts(selection, Config.wds_config, false);
             }
         });
 
@@ -52,9 +51,8 @@ define([
             queries: Config.queries
         });
 
-/*
-        $('section').not('#filter_region').hide();
-*/
+
+
     };
 
     return RegionController;

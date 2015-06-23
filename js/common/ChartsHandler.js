@@ -1,6 +1,7 @@
 
-define(['jquery', 'underscore', 'handlebars', 'text!html/region/charts.html','WDSClient', 'fx-c-c/start'],
-    function ($,_, Handlebars, tmplCharts, WDSClient, FXChart) {
+define(['jquery', 'underscore', 'handlebars', 'text!html/region/charts.html',
+        'text!html/country/charts.html','WDSClient', 'fx-c-c/start'],
+    function ($,_, Handlebars, tmplChartsRegion, tmplChartsCountry,WDSClient, FXChart) {
 
     'use strict'
 
@@ -26,26 +27,25 @@ define(['jquery', 'underscore', 'handlebars', 'text!html/region/charts.html','WD
         creator = new FXChart();
 
         self.$container = (self.o.container instanceof jQuery) ? self.o.container : $(self.o.container);
-        self.$container.append( Handlebars.compile(tmplCharts)() );
 
     };
 
-    ChartsHandler.prototype.renderCharts = function (queryParameters, wdsConfig, isRegion) {
+    ChartsHandler.prototype.renderCharts = function (queryParameters, wdsConfig, isCountry) {
+        var self = this;
+        var tmplCharts = (isCountry)? tmplChartsCountry: tmplChartsRegion;
+        self.$container.append( Handlebars.compile(tmplCharts)() );
 
         this.o.queryParams = queryParameters;
         this.o.wdsConfig = wdsConfig;
 
-        if(isRegion) {
+        if(!isCountry) {
             // region
-            this._createChart(this.o.queries.region_within, false, true);
-            this._createChart(this.o.queries.region_year, false, false);
+            this._createChart(this.o.queries.region_within, isCountry, true);
+            this._createChart(this.o.queries.region_year, isCountry, false);
 
-            /*  // country
-             this._createChart(this.o.queries.country_balance, true, true);
-             this._createChart(this.o.queries.country_bar, true, false);*/
         }else{
-            this._createChart(this.o.queries.country_balance, true, true);
-            this._createChart(this.o.queries.country_bar, true, false);
+            this._createChart(this.o.queries.country_balance, isCountry, true);
+            this._createChart(this.o.queries.country_bar, isCountry, false);
         }
     };
 
