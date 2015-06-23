@@ -1,6 +1,6 @@
 
 section {
-	border: 1px solid red;
+	border: 1px solid green;
 	margin: 20px 0;
 }
 
@@ -11,4 +11,8 @@ section {
 
 #tab_growth {
 	overflow-y:scroll;
+}
+
+.fm-box-legend {
+	opacity: 0.8
 }

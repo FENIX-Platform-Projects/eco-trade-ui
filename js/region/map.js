@@ -54,7 +54,6 @@ define([
 
         var self = this;
 
-
         wdsClient.retrieve({
             payload: {
                 query: Config.queries.table_region,
@@ -62,7 +61,7 @@ define([
             },
             success: function (data) {
                 $('#tab_growth', self.$container).html( tableGrowth({
-                    headers: ['Year','Value'],
+                    headers: ['Period','Growth Rate'],
                     rows: data
                 }) );
             }
@@ -91,7 +90,8 @@ define([
             self.o.selection.year = sel.value;
         });
 
-        $('#filter_year_map_label',self.container$).text( parseInt(_.first(years)) );        
+        var label = _.first(years)+'-'+_.last(years);
+        $('#filter_year_map_label',self.container$).text( label );
     };
 
     MAP.prototype.initMap = function(id) {
@@ -130,25 +130,17 @@ define([
                 queryVars: self.o.selection
             },
             success: function(rawData) {
-                //var rawData = [["2","Afghanistan","512094.0","tonnes"],["4","Algeria","320.0","tonnes"], ...
-                var joinData = []
-                rawData.forEach(function(d){
-                    var v = {};
-                    v[d[0]] = parseFloat(d[1])
-                    joinData.push(v);
-                });
-
-                console.log(joinData);
-                
-                self.updateJoinLayer(joinData);
+                self.updateLayer(_.map(rawData, function(v) {
+                    return _.object([v[0]], [v[1]]);
+                }));
             }
         });
     };
 
-    MAP.prototype.updateJoinLayer = function(joinData) {
+    MAP.prototype.updateLayer = function(joinData) {
 
         var joinColumnlabel = 'areanamee',
-            joinColumn = 'gaul0';
+            joinColumn = 'adm0_code';
         
         if(this.joinlayer)
             this.map.removeLayer(this.joinlayer);
@@ -166,7 +158,7 @@ define([
             jointype: "shaded",
             openlegend: true,
             defaultgfi: true,
-            colorramp: "Greens",
+            colorramp: "Blues",
             intervals: 7,
             lang: "en",            
             customgfi: {
@@ -181,7 +173,7 @@ define([
     };
 
     MAP.prototype.zoomTo = function(codes) {
-        this.map.zoomTo("country", "gaul0", codes);
+        this.map.zoomTo("country", "adm0_code", codes);
     };
 
     return MAP;
