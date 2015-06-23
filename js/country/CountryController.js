@@ -3,17 +3,13 @@ define([
     'Config',
     'WDSClient',
     './../common/filter',
-/*
-    './map',
-*/
+    '../common/map',
     '../common/ChartsHandler'
 ], function ($, _, bootstrap, Handlebars,
              Config,
              WDSClient,
              Filter,
-/*
              regionMap,
-*/
              ChartsHandler) {
 
     'use strict'
@@ -32,18 +28,16 @@ define([
             filters: self.$containers.filters,
             isCountry: true,
             onSubmit: function (selection) {
+                
+                console.log('selection',selection)
+                
+                rmap.renderSelection(selection);
 
-                /*
-                                rmap.renderSelection(selection);
-                */
                 chartsHandler.renderCharts(selection, Config.wds_config, true);
-/*
-                $(self.$containers.container+' section').show();
-*/
             }
         });
 
-     /*   rmap = new regionMap({
+        rmap = new regionMap({
             container: self.$containers.container,
             selection: {
                 year_list: _.range(Config.rangeslider_config.defaultValues.min, Config.rangeslider_config.defaultValues.max).join()
@@ -52,15 +46,11 @@ define([
                 console.log('MAP onChangeYear', year);
             }
         });
-*/
+
         chartsHandler = new ChartsHandler({
             container: self.$containers.container,
             queries: Config.queries
         });
-
-/*
-        $('section').not('#filter_country').hide();
-*/
     };
 
 

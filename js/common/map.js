@@ -1,6 +1,7 @@
 define([
     'jquery','underscore','bootstrap','handlebars','jstree','bootstrapslider',
     'Config',
+    'Codelists',
     'WDSClient',
     'text!html/region/map.html',
     'text!fx-ui-table',    
@@ -8,6 +9,7 @@ define([
 ], function (
     $, _, bootstrap, Handlebars, jstree, bootstrapslider,
     Config,
+    Codelists,
     WDSClient,
     tmplMap,
     tmplTable,
@@ -45,9 +47,39 @@ define([
         self.$container = (self.o.container instanceof jQuery) ? self.o.container : $(self.o.container);
         self.$container.append( Handlebars.compile(tmplMap)() );
 
+        self.initPartners(this.o.selection);
         self.initMap('#map_partners_region');
         self.initYearSlider(this.o.selection);
         self.initGrowth(this.o.selection);
+    };
+
+
+    MAP.prototype.initPartners = function(selection) {
+
+        var self = this;
+
+        wdsClient.retrieve({
+            payload: {
+                query: Config.queries.table_region,
+                queryVars: selection
+            },
+            success: function (data) {
+                
+                $('#filter_partner_code', self.$container).jstree({
+                    plugins: ["wholerow", "checkbox"],
+                    core: {
+                        multiple: false,
+                        themes: {
+                            icons: false
+                        },
+                        data: Codelists.countries
+                    }
+                }).on('changed.jstree', function (e, data) {
+                    e.preventDefault();
+                    //self.o.selection.commodity_code = data.selected[0];
+                });
+            }
+        });
     };
 
     MAP.prototype.initGrowth = function(selection) {
@@ -160,7 +192,7 @@ define([
                     jointype: "shaded",
                     openlegend: true,
                     defaultgfi: true,
-                    colorramp: "Blues",
+                    colorramp: Config.legend_config[ selection.trade_flow_code ],
                     intervals: 7,
                     lang: "en",            
                     customgfi: {

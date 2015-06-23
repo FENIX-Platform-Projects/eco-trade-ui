@@ -3,7 +3,7 @@ define([
     'Config',
     'WDSClient',
     './../common/filter',
-    './map',
+    '../common/map',
     '../common/ChartsHandler'
 ], function ($, _, bootstrap, Handlebars,
              Config,
@@ -31,6 +31,8 @@ define([
             filters: self.$containers.filters,
             isCountry: false,
             onSubmit: function (selection) {
+                console.log('selection',selection)
+
                 rmap.renderSelection(selection);
                 chartsHandler.renderCharts(selection, Config.wds_config, false);
             }
@@ -51,6 +53,7 @@ define([
             queries: Config.queries
         });
 
+        
 
 
     };

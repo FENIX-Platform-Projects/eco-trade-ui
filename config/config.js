@@ -5,7 +5,7 @@ define({
     },
     map_config: {
         plugins: {
-            zoomcontrol: 'topleft',
+            zoomcontrol: 'bottomright',
             zoomResetControl: false,
             controlloading: false,
             mouseposition: false,
@@ -19,9 +19,13 @@ define({
             wmsLoader: false
         }
     },
+    legend_config: {
+        "IMP": "blues",
+        "EXP": "greens"
+    },
     rangeslider_config: {
         bounds: {
-            min: 2000,
+            min: 2003,
             max: 2014
         },
         step: 1,
