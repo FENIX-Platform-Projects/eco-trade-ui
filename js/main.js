@@ -21,11 +21,14 @@ requirejs(['./paths'], function (paths) {
 
         var rmap, chartsHandler
 
+        
+
         var filter = new Filter({
             container: '#page_region',
             onSubmit: function (selection) {
                 rmap.renderSelection(selection);
                 chartsHandler.renderCharts(selection, Config.wds_config, true);
+                $('#page_region section').show();
             }
         });
 
@@ -43,6 +46,8 @@ requirejs(['./paths'], function (paths) {
             container: '#page_region',
             queries: Config.queries
         });
+
+        $('section').not('#filter').hide();
         /*
 
          var wdsClient = new WDSClient(Config.wds_config);
