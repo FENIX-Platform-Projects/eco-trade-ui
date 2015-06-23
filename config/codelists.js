@@ -9,7 +9,6 @@ define({
       EXP: "Export"
   },
   countries: {
-      "WLD": "World",     
       "1": "Afghanistan",
       "10": "Antarctica",
       "101": "Guam",

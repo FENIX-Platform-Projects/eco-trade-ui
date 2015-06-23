@@ -33,8 +33,13 @@ define({
 	queries: {
 		test: 'SELECT year FROM ecotrade_region_trade',
 		// REGIONS QUERIES
+<<<<<<< f5d04683811321c17b157faddc854d94efb2920c
 		table_region : "select year, value from ecotrade.ecotrade_region_growth where year in ({year_list}) and commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}'",
 		map_region :   "select partner_code, value from ecotrade.ecotrade_region_trade where partner_code <> 'WLD' and commodity_code ='{commodity_code}' and trade_flow_code ='{trade_flow_code}' and year = {year} order by year",
+=======
+		table_region : "select year-1 || '/'|| year as season, coalesce(round(value,2)|| ' %', '-') as value from ecotrade.ecotrade_region_growth where year in ({year_list}) and commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}'",
+		map_region :   "select partner_code, value from ecotrade.ecotrade_region_trade where commodity_code ='{commodity_code}' and trade_flow_code ='{trade_flow_code}' and year = {year} order by year",
+>>>>>>> f21c0e966af0f6791ee53ae2328b285516aa2cde
 		region_within:  "select year,partner_label,value,um from ecotrade.ecotrade_region_trade where year in ({year_list}) and partner_code in ('WTO', 'WTN') and  trade_flow_code = '{trade_flow_code}' and commodity_code ='{commodity_code}'",
 		region_year : "select year,trade_flow_label,value,um from ecotrade.ecotrade_region_trade where year in ({year_list}) and partner_code = 'WLD'  and trade_flow_code ='{trade_flow_code}' and commodity_code = '{commodity_code}' order by year",
         // COUNTRY QUERIES
