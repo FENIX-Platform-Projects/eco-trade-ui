@@ -9,6 +9,9 @@ section {
 	height: 300px;
 }
 
+#filter_year_map_label {
+	height: 50px;
+}
 #tab_growth {
 	overflow-y:scroll;
 }

@@ -116,60 +116,63 @@ define([
 
         var self = this;
 
-        //if(selection.year===null)
-        selection.year = selection.year_list.split(',')[0];
-
         self.o.selection = selection;
+
+        if(self.o.selection.year==null)
+            self.o.selection.year = selection.year_list.split(',')[0];
 
         self.initYearSlider(selection);
         self.initGrowth(selection);
+        self.updateLayer(selection);
+    };
+
+    MAP.prototype.updateLayer = function(selection) {
+
+        var self = this;
 
         wdsClient.retrieve({
             payload: {
                 query: Config.queries.map_region,
-                queryVars: self.o.selection
+                queryVars: selection
             },
             success: function(rawData) {
-                self.updateLayer(_.map(rawData, function(v) {
-                    return _.object([v[0]], [v[1]]);
-                }));
+
+                var joinColumnlabel = 'areanamee',
+                    joinColumn = 'adm0_code',
+                    joinData = _.map(rawData, function(v) {
+                        return _.object([v[0]], [v[1]]);
+                    });
+                
+                if(self.joinlayer)
+                    self.map.removeLayer(self.joinlayer);
+
+                self.joinlayer = new FM.layer({
+                    joindata: joinData,            
+                    joincolumn: joinColumn,
+                    joincolumnlabel: joinColumnlabel,
+                    layers: 'fenix:gaul0_faostat_3857',
+                    layertitle: "USD",
+                    opacity: '0.8',            
+                    mu: "USD",
+                    legendsubtitle: "USD",
+                    layertype: "JOIN",
+                    jointype: "shaded",
+                    openlegend: true,
+                    defaultgfi: true,
+                    colorramp: "Blues",
+                    intervals: 7,
+                    lang: "en",            
+                    customgfi: {
+                        showpopup: false,             
+                        content: {
+                            en: "{{"+joinColumn+"}}"
+                        }
+                        //TODO ,callback: _.bind(self.handleCountrySelection, self)
+                    }
+                });
+                self.map.addLayer(self.joinlayer);
             }
-        });
-    };
-
-    MAP.prototype.updateLayer = function(joinData) {
-
-        var joinColumnlabel = 'areanamee',
-            joinColumn = 'adm0_code';
-        
-        if(this.joinlayer)
-            this.map.removeLayer(this.joinlayer);
-
-        this.joinlayer = new FM.layer({
-            joindata: joinData,            
-            joincolumn: joinColumn,
-            joincolumnlabel: joinColumnlabel,
-            layers: 'fenix:gaul0_faostat_3857',
-            layertitle: "USD",
-            opacity: '0.8',            
-            mu: "USD",
-            legendsubtitle: "USD",
-            layertype: "JOIN",
-            jointype: "shaded",
-            openlegend: true,
-            defaultgfi: true,
-            colorramp: "Blues",
-            intervals: 7,
-            lang: "en",            
-            customgfi: {
-                showpopup: false,             
-                content: {
-                    en: "{{"+joinColumn+"}}"
-                }
-                //TODO ,callback: _.bind(this.handleCountrySelection, this)
-            }
-        });
-        this.map.addLayer(this.joinlayer);
+        });        
     };
 
     MAP.prototype.zoomTo = function(codes) {
