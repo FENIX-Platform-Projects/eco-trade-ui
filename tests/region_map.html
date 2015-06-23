@@ -73,7 +73,7 @@ requirejs(['../js/paths'], function (paths) {
         'jquery','underscore','bootstrap','handlebars',
         'Config',
         'js/region/map',
-        'js/region/filter'
+        'js/common/filter'
     ], function ($, _, bootstrap, Handlebars,
         Config,
         regionMap,
@@ -84,6 +84,11 @@ requirejs(['../js/paths'], function (paths) {
 
         var filter = new regionFilter({
             container: '#page_region',
+            filters: {
+                year: '#filter_year',
+                trade_flow: '#filter_trade_flow_code',
+                commodity: '#filter_commodity_code'
+            },
             onSubmit: function(selection) {
                 rmap.renderSelection(selection);
             }
