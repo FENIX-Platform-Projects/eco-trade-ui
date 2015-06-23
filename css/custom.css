@@ -1,6 +1,8 @@
-
+body {
+	overflow-y:scroll;
+}
 section {
-	border: 1px solid green;
+	border: 1px solid blue;
 	margin: 20px 0;
 }
 
@@ -11,11 +13,14 @@ section {
 
 #filter_year_map_label {
 	height: 50px;
+	font-weight: bold;
 }
 #tab_growth {
 	overflow-y:scroll;
 }
 
 .fm-box-legend {
-	opacity: 0.8
+	opacity: 0.8;
+	min-width:104px;
+	min-height: 182px;
 }

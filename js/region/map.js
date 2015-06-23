@@ -84,13 +84,14 @@ define([
         
         self.$slider = $('#filter_year_map', self.$container).slider(slideCfg);
         
-        self.$slider.on('slide slideEnabled', function(e,sel) {
-            $('#filter_year_map_label',self.container$).text( sel.value );
+        self.$slider.on('slide slideEnabled', _.debounce(function(e,sel) {
+            $('#filter_year_map_label',self.container$).text('Year '+ sel.value );
             self.o.onChangeYear(sel.value);
             self.o.selection.year = sel.value;
-        });
+            self.updateLayer(self.o.selection);
+        }, 300));
 
-        var label = _.first(years)+'-'+_.last(years);
+        var label = 'Year '+_.first(years)+'-'+_.last(years);
         $('#filter_year_map_label',self.container$).text( label );
     };
 
@@ -118,7 +119,7 @@ define([
 
         self.o.selection = selection;
 
-        if(self.o.selection.year==null)
+        if(self.o.selection.year == null)
             self.o.selection.year = selection.year_list.split(',')[0];
 
         self.initYearSlider(selection);
