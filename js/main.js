@@ -15,29 +15,38 @@ requirejs(['./paths'], function (paths) {
         containers,
         RegionController, CountryController) {
 
-        var region = _.once(function() {
-            var regionController = new RegionController(containers.region)
-            regionController.init();                    
-        });
+        var countryController,regionController;
 
-        var country = _.once(function() {
-            var countryController = new CountryController(containers.country)
-            countryController.init();                    
-        });
+
 
         $('#trade_tabs').find('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
             switch($(e.target).attr('href'))
             {
                 case '#page_region':
-                    region();
-                break;
+                    if(!regionController) {
+                        regionController = new RegionController(containers.region)
+                        regionController.init();
+                    }else{
+                        regionController.reinitFilterValues();
+
+                    }
+                    break;
                 case '#page_countries':
-                    country();
+
+                    if(!countryController) {
+                        countryController = new CountryController(containers.country)
+                        alert('country')
+                        countryController.init();
+                    }else{
+                        countryController.reinitFilterValues();
+                    }
                 break;
             }
         });
-        region();
+        regionController = new RegionController(containers.region)
+        regionController.init();
+
 
         /*
 

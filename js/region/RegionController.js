@@ -26,7 +26,7 @@ define([
         $(self.$containers.container).show()
         console.log(self.$containers.container);
 
-        var filter = new Filter({
+        self.filter = new Filter({
             container: self.$containers.container,
             filters: self.$containers.filters,
             isCountry: false,
@@ -57,6 +57,11 @@ define([
 
 
     };
+
+    RegionController.prototype.reinitFilterValues = function(){
+        debugger;
+        this.filter.reinitTradeFlowRadio();
+    }
 
     return RegionController;
 })

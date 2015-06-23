@@ -58,14 +58,14 @@ define([
 
         var self = this;
 
-        var radioComm$ = $('input[name="trade_flow_code"]:radio', self.$container);
-        
-        radioComm$.on('change', function (e, data) {
+        self.radioComm$ = $('input[name="trade_flow_code"]:radio', self.$container);
+
+        self.radioComm$.on('change', function (e, data) {
             e.preventDefault();
             self.selection.trade_flow_code = $(e.target).val();
         });
 
-        self.selection.trade_flow_code = radioComm$.val();
+        self.selection.trade_flow_code = self.radioComm$.val();
     };
 
 
@@ -140,6 +140,16 @@ define([
         var self =this;
         self.rangeYear.reset();
     };
+
+
+    FILTER.prototype.reinitTradeFlowRadio = function() {
+        var self = this;
+
+        self.selection.trade_flow_code === 'IMP' ?
+            self.radioComm$[1].checked = true:
+            self.radioComm$[0].checked = true;
+
+    }
 
     return FILTER;
 });

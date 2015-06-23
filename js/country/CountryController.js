@@ -14,6 +14,8 @@ define([
 
     'use strict'
 
+    var filter;
+
     function CountryController(containers){
         this.$containers = containers;
     };
@@ -23,7 +25,7 @@ define([
 
         var rmap, chartsHandler
 
-        var filter = new Filter({
+        filter = new Filter({
             container: self.$containers.container,
             filters: self.$containers.filters,
             isCountry: true,
@@ -53,6 +55,10 @@ define([
         });
     };
 
+    CountryController.prototype.reinitFilterValues = function(){
+
+        filter.reinitTradeFlowRadio();
+    }
 
     return CountryController;
 })
