@@ -51,8 +51,6 @@ define([
         self.$container = (self.o.container instanceof jQuery) ? self.o.container : $(self.o.container);
         self.$container.append( Handlebars.compile(tmplMap)() );
 
-console.log('MAP',self.o.selection);
-
         self.initMap('#map_partners_region');
         self.initYearSlider(self.o.selection);        
         self.initGrowth(self.o.selection);
@@ -62,14 +60,17 @@ console.log('MAP',self.o.selection);
 
         var self = this;
 
-        console.log('initPartners',selection)
-
         wdsClient.retrieve({
             payload: {
                 query: Config.queries.region_partners,
                 queryVars: selection
             },
             success: function (data) {
+
+                data = _.map(data, function(v) {
+                    v[1] += ' USD';
+                    return v;
+                });
 
                 $('#filter_partner_code', self.$container).html( tableGrowth({
                     headers: ['Partner','Year '+ selection.year],
