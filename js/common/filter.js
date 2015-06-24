@@ -3,7 +3,8 @@ define([
     'Config',
     'Codelists',
     'text!../../html/region/filter.html',
-    'text!../../html/country/filter.html'
+    'text!../../html/country/filter.html',
+    'amplify'
 ], function (
     $, _, bootstrap, Handlebars, jstree, rangeslider,
     Config,
@@ -23,6 +24,7 @@ define([
             container: '',
             onSubmit: $.noop
         });
+
 
         self.selection = {
             year_list: [],
@@ -105,6 +107,9 @@ define([
         }).on('changed.jstree', function (e, data) {
             e.preventDefault();
                 self.selection.reporter_code = data.selected[0];
+            if(self.opts.isCountry){
+                amplify.publish('partner.changed', data.selected[0])
+            }
         });
     }
 
@@ -147,6 +152,45 @@ define([
             self.radioComm$[1].checked = true:
             self.radioComm$[0].checked = true;
     }
+
+    FILTER.prototype.reinitSidebar = function(template, urlImages) {
+        var self = this;
+        if(self.opts.isCountry) {
+            self._redrawSidebarCountry(template,urlImages)
+        }else{
+            self._redrawSidebarRegion(template)
+        }
+    }
+
+    FILTER.prototype._redrawSidebarCountry = function(template, urlImages) {
+
+        var self = this;
+
+
+        var regionSidebar = $('#overview_region')
+        if (regionSidebar.length >0) {
+            $('#overview_region').remove();
+            $('body').prepend(template);
+        }
+
+        if (!self.$urlImages || self.$urlImages !== urlImages) {
+            self.$urlImages = urlImages;
+            $('#gdp_country').attr("src", urlImages + 'gdp.jpg');
+            $('#balance_country').attr("src", urlImages + 'balance.jpg');
+            $('#comm_country').attr("src", urlImages + 'gdp.jpg');
+        }
+    }
+
+    FILTER.prototype._redrawSidebarRegion = function(template) {
+
+        var regionSidebar =  $('#overview_country')
+        if(regionSidebar){
+            $('#overview_country').remove();
+            $('body').prepend(template);
+        }
+
+    }
+
 
     return FILTER;
 });

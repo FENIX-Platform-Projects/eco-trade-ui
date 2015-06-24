@@ -23,6 +23,8 @@ define([
     RegionController.prototype.init = function(){
 
         var self = this;
+        self.$tmpl = SidebarTmpl;
+
 
         var rmap, chartsHandler
         $(self.$containers.container).show()
@@ -56,11 +58,14 @@ define([
         });
 
 
-       var sidebar = $('body').prepend(SidebarTmpl);
+        $('body').prepend(self.$tmpl);
     };
 
     RegionController.prototype.reinitFilterValues = function(){
-        this.filter.reinitTradeFlowRadio();
+
+        var self = this;
+        self.filter.reinitSidebar( self.$tmpl);
+        self.filter.reinitTradeFlowRadio();
     }
 
     return RegionController;

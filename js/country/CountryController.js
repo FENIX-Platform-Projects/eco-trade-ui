@@ -4,13 +4,16 @@ define([
     'WDSClient',
     './../common/filter',
     '../common/map',
-    '../common/ChartsHandler'
+    '../common/ChartsHandler',
+    'text!../../html/country/sidebar.html',
+    'amplify',
 ], function ($, _, bootstrap, Handlebars,
              Config,
              WDSClient,
              Filter,
              regionMap,
-             ChartsHandler) {
+             ChartsHandler,
+             SidebarTmpl) {
 
     'use strict'
 
@@ -22,10 +25,11 @@ define([
 
     CountryController.prototype.init = function(){
         var self = this;
+        self.$tmpl = SidebarTmpl;
 
         var rmap, chartsHandler
 
-        filter = new Filter({
+        self.filter = new Filter({
             container: self.$containers.container,
             filters: self.$containers.filters,
             isCountry: true,
@@ -53,12 +57,24 @@ define([
             container: self.$containers.container,
             queries: Config.queries
         });
+
+        amplify.subscribe( "partner.changed", function(code){
+            self.$imageUrl = self.$containers.sidebar_img[code]
+            self.reinitFilterValues( self.$imageUrl)
+        });
+
+        self.filter.reinitSidebar(self.$tmpl, self.$containers.sidebar_img[1])
     };
 
-    CountryController.prototype.reinitFilterValues = function(){
+    CountryController.prototype.reinitFilterValues = function(urlImages){
 
-        filter.reinitTradeFlowRadio();
+        var self = this;
+        debugger;
+        var urlImg = (typeof urlImages !== 'undefined')?urlImages: self.$imageUrl;
+        this.filter.reinitSidebar( this.$tmpl,  urlImg);
+        this.filter.reinitTradeFlowRadio();
     }
+
 
     return CountryController;
 })
