@@ -177,9 +177,9 @@ define([
 
         if (!self.$urlImages || self.$urlImages !== urlImages) {
             self.$urlImages = urlImages;
-            $('#gdp_country').attr("src", urlImages + 'gdp.jpg');
-            $('#balance_country').attr("src", urlImages + 'balance.jpg');
-            $('#comm_country').attr("src", urlImages + 'gdp.jpg');
+            $('#gdp_country').attr("src", urlImages + 'gdp.png');
+            $('#balance_country').attr("src", urlImages + 'balance.png');
+            $('#comm_country').attr("src", urlImages + 'gdp.png');
         }
     }
 

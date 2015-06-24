@@ -24,18 +24,14 @@ define([
 
         var self = this;
         self.$tmpl = SidebarTmpl;
-
-
         var rmap, chartsHandler
         $(self.$containers.container).show()
-        console.log(self.$containers.container);
 
         self.filter = new Filter({
             container: self.$containers.container,
             filters: self.$containers.filters,
             isCountry: false,
             onSubmit: function (selection) {
-                console.log('selection',selection)
 
                 rmap.renderSelection(selection);
                 chartsHandler.renderCharts(selection, Config.wds_config, false);
