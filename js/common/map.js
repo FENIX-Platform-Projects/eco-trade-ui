@@ -68,12 +68,11 @@ define([
             success: function (data) {
 
                 data = _.map(data, function(v) {
-                    v[1] += ' USD';
                     return v;
                 });
 
                 $('#filter_partner_code', self.$container).html( tableGrowth({
-                    headers: ['Partner','Year '+ selection.year],
+                    headers: ['Partner', selection.year+' (USD)'],
                     rows: data
                 }) );
             }
