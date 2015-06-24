@@ -79,6 +79,8 @@ define([
     
             if(!self.o.isCountry)
                 self.initTopPartners(self.o.selection);
+            else
+                self.initLeftPartners(self.o.selection);            
         });
 
         self.initYearSlider(self.o.selection);
@@ -210,9 +212,9 @@ define([
         self.updateLayer(selection);
 
         if(!self.o.isCountry)
-            self.initLeftPartners(selection);
+            self.initTopPartners(selection);
         else
-            self.initTopPartners(selection);    
+            self.initLeftPartners(selection);
     };
 
     MAP.prototype.initMap = function(id) {
