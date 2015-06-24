@@ -49,7 +49,7 @@ define({
         map_region :   "select partner_code, value from ecotrade.ecotrade_region_trade where partner_code not in('WLD', 'WTN', 'WTO') and commodity_code ='{commodity_code}' and trade_flow_code ='{trade_flow_code}' and year = {year} order by year",
         region_within:  "select year,partner_label,value,um from ecotrade.ecotrade_region_trade where year in ({year_list}) and partner_code in ('WTO', 'WTN') and  trade_flow_code = '{trade_flow_code}' and commodity_code ='{commodity_code}'",
         region_year : "select year,trade_flow_label,value,um from ecotrade.ecotrade_region_trade where year in ({year_list}) and partner_code = 'WLD'  and trade_flow_code ='{trade_flow_code}' and commodity_code = '{commodity_code}' order by year",
-        region_partners: "select partner_label,value from ecotrade.ecotrade_region_trade where year = {year} and trade_flow_code = '{trade_flow_code}' and commodity_code ='{commodity_code}' and partner_code not in('WLD','WTN','WTO') order by value desc limit 6",
+        region_partners: "select partner_label, coalesce(value || ' USD', '-') as value from ecotrade.ecotrade_region_trade where year = {year} and trade_flow_code = '{trade_flow_code}' and commodity_code ='{commodity_code}' and partner_code not in('WLD','WTN','WTO') order by value desc limit 6",
 
         // COUNTRY QUERIES
         country_balance: "select year,commodity_label,value,um from ecotrade.ecotrade_country_tradebalance where year in ({year_list}) and reporter_code = '{reporter_code}' and commodity_code = '{commodity_code}'",

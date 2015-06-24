@@ -52,8 +52,7 @@ define([
         self.$container.append( Handlebars.compile(tmplMap)() );
 
         self.initMap('#map_partners_region');
-        self.initPartners(self.o.selection);
-        self.initYearSlider(self.o.selection);
+        self.initYearSlider(self.o.selection);        
         self.initGrowth(self.o.selection);
     };
 
@@ -68,10 +67,8 @@ define([
             },
             success: function (data) {
 
-                console.log('initPartners',data);
-
                 $('#filter_partner_code', self.$container).html( tableGrowth({
-                    headers: ['Partner','USD'],
+                    headers: ['Partner','Year '+ selection.year],
                     rows: data
                 }) );
             }
@@ -114,9 +111,13 @@ define([
             self.slider = $('#filter_year_map', self.$container).bootstrapSlider(slideCfg);
             self.slider.on('slideStop', function(sel) {
                 self.o.onChangeYear( sel.value );
-                self.o.selection.year = sel.value;  
+                self.o.selection.year = sel.value;
                 self.updateLayer(self.o.selection);
+                self.initPartners(self.o.selection);
             });
+            selection.year = slideCfg.value;
+            self.updateLayer(selection);
+            self.initPartners(selection);            
         }
         else {
             self.slider.bootstrapSlider('setAttribute','min', slideCfg.min);
@@ -136,7 +137,7 @@ define([
             layers: 'fenix:gaul0_line_3857',
             layertitle: 'Country Boundaries',
             urlWMS: 'http://fenix.fao.org/geoserver',
-            opacity: '0.9',
+            opacity: 1,
             zindex: '500',
             lang: 'en'
         }));
@@ -153,7 +154,6 @@ define([
         if(self.o.selection.year == null)
             self.o.selection.year = selection.year_list.split(',')[0];
 
-        self.initPartners(self.o.selection);
         self.initYearSlider(self.o.selection);
         self.initGrowth(self.o.selection);
         self.updateLayer(self.o.selection);
