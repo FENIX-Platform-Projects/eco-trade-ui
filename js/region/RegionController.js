@@ -45,10 +45,10 @@ define([
         rmap = new regionMap({
             container: self.$containers.container,
             selection: {
-                year_list: _.range(Config.rangeslider_config.defaultValues.min, Config.rangeslider_config.defaultValues.max).join()
-            },
-            onChangeYear: function (year) {
-                console.log('MAP onChangeYear', year);
+                year: Config.rangeslider_config.defaultValues.min,
+                year_list: _.range(Config.rangeslider_config.defaultValues.min, Config.rangeslider_config.defaultValues.max).join(),
+                trade_flow_code: 'EXP',
+                commodity_code: 'AGR'
             }
         });
 

@@ -51,6 +51,8 @@ define([
         self.$container = (self.o.container instanceof jQuery) ? self.o.container : $(self.o.container);
         self.$container.append( Handlebars.compile(tmplMap)() );
 
+console.log('MAP',self.o.selection);
+
         self.initMap('#map_partners_region');
         self.initYearSlider(self.o.selection);        
         self.initGrowth(self.o.selection);
@@ -59,6 +61,8 @@ define([
     MAP.prototype.initPartners = function(selection) {
 
         var self = this;
+
+        console.log('initPartners',selection)
 
         wdsClient.retrieve({
             payload: {
@@ -115,24 +119,20 @@ define([
                 self.updateLayer(self.o.selection);
                 self.initPartners(self.o.selection);
             });
-            selection.year = slideCfg.value;
-            self.updateLayer(selection);
-            self.initPartners(selection);            
         }
         else {
             self.slider.bootstrapSlider('setAttribute','min', slideCfg.min);
             self.slider.bootstrapSlider('setAttribute','max', slideCfg.max);
             self.slider.bootstrapSlider('setValue', slideCfg.min);
-            console.log('reconfig slider')
         }
+        selection.year = slideCfg.value;
+        self.updateLayer(selection);
+        self.initPartners(selection);        
     };
 
     MAP.prototype.initMap = function(id) {
 
-        var self = this;
-
         this.map = new FM.Map(id, Config.map_config);
-
         this.map.addLayer(new FM.layer({
             layers: 'fenix:gaul0_line_3857',
             layertitle: 'Country Boundaries',
@@ -141,8 +141,7 @@ define([
             zindex: '500',
             lang: 'en'
         }));
-
-        this.map.createMap();
+        this.map.createMap(40,0);
     };
 
     MAP.prototype.renderSelection = function(selection) {
@@ -151,8 +150,10 @@ define([
 
         self.o.selection = selection;
 
-        if(self.o.selection.year == null)
+        if(!self.o.selection.year)
             self.o.selection.year = selection.year_list.split(',')[0];
+        if(!self.o.selection.trade_flow_code)
+            self.o.selection.trade_flow_code = 'EXP';
 
         self.initYearSlider(self.o.selection);
         self.initGrowth(self.o.selection);
