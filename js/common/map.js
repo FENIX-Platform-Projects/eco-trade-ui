@@ -51,7 +51,7 @@ define([
         self.$container = (self.o.container instanceof jQuery) ? self.o.container : $(self.o.container);
         self.$container.append( Handlebars.compile(tmplMap)() );
 
-        self.initMap('#map_partners_region');
+        self.initMap('#map_partners');
         self.initYearSlider(self.o.selection);        
         self.initGrowth(self.o.selection);
     };
