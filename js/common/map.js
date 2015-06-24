@@ -222,36 +222,25 @@ define([
         var self = this;
 
         this.map = new FM.Map(id, Config.map_config);
-/*
-    //TODO layer violet contains Config.eco_countries
-            joinColumn = 'adm0_code',
-            joinData = _.map(rawData, function(v) {
-                return _.object([v[0]], [v[1]]);
-            });
-    
-        if(self.joinlayer)
-            self.map.removeLayer(self.joinlayer);
 
-        self.joinlayer = new FM.layer({
-            ranges: Config.legend_config[ selection.trade_flow_code ].ranges,
-            joindata: joinData,  
-        this.map.addLayer(new FM.layer({
-            layers: 'fenix:gaul0_line_3857',
-            layertitle: 'ECO Countries',
-            urlWMS: 'http://fenix.fao.org/geoserver',
-            opacity: 1,
-            zindex: 500,
-            lang: 'en'
-        }));
-*/
         this.map.addLayer(new FM.layer({
             layers: 'fenix:gaul0_line_3857',
             layertitle: 'Country Boundaries',
             urlWMS: 'http://fenix.fao.org/geoserver',
             opacity: 1,
+            zindex: 800,
+            lang: 'en'
+        }));
+
+        this.map.addLayer(new FM.layer({
+            layers: 'fenix:gaul0_eco_3857',
+            layertitle: 'ECO Countries',
+            urlWMS: 'http://fenix.fao.org/demo/fenix/geoserver',
+            opacity: 0.5,
             zindex: 1000,
             lang: 'en'
         }));
+
         this.map.createMap(40,0);
     };
 
@@ -311,7 +300,6 @@ define([
                         layers: 'fenix:gaul0_faostat_3857',
                         layertitle: Config.legend_config[ selection.trade_flow_code ].title,
                         opacity: 1,
-                        zindex: 500,
                         mu: "US$",
                         legendsubtitle: "",
                         layertype: "JOIN",
