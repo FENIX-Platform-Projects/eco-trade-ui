@@ -49,6 +49,7 @@ define(function () {
                 max: 2010
             }
         },
+        max_countries_list: 5,
         queries: {
             test: 'SELECT year FROM ecotrade_region_trade',
             // REGIONS QUERIES
@@ -82,7 +83,7 @@ define(function () {
                 "and trade_flow_code = '{trade_flow_code}'  "+
                 "and partner_code not in('WLD', 'WTN', 'WTO') and partner_code not in " + reporter_countries + " "+
                 "group by value, partner_code,partner_label order by partner_code,value DESC)  "+
-                "as v) as g order by value desc limit 5 ",
+                "as v) as g order by value desc",
             map_subcommodities: "select sub_commodity_label, value from ecotrade.ecotrade_country_subelements where year= {year} and partner_code ='{partner_code}' and reporter_code = '{reporter_code}' and " +
                 "commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}' order by value desc"
         }

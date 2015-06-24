@@ -6,7 +6,11 @@ section {
 	margin: 20px 0;
 }
 
-#map_partners,
+.eco_map {
+	overflow: hidden;
+	width: 100%;
+}
+.eco_map,
 #tab_growth{
 	height: 320px;
 }
@@ -37,6 +41,9 @@ section {
 	min-width:104px;
 	min-height: 182px;
 }
+.overview {
+	margin-left: 20px;
+}
 .overview img {
 	max-width: 250px;
 	height: auto;
@@ -49,4 +56,9 @@ section {
 .table {
 	border: 1px solid blue;
 	height: 320px;
+}
+
+.dropdown-menu {
+  box-shadow: 0 16px 22px rgba(0,0,0,0.4);
+  padding: 10px;
 }

@@ -51,9 +51,13 @@ define([
         self.slider = null;
 
         self.$container = (self.o.container instanceof jQuery) ? self.o.container : $(self.o.container);
-        self.$container.append( Handlebars.compile(tmplMap)() );
+        
+        self.mapId = 'map_'+(self.o.isCountry?'country':'region');
+        self.$container.append( Handlebars.compile(tmplMap)({mapId: self.mapId }) );
 
-        self.initMap('#map_partners');
+        self.initMap(self.mapId);
+
+
 
         if(self.o.isCountry)
             self.initComm(self.o.selection);
@@ -125,12 +129,20 @@ define([
                 
                 var resData = [];
                 for(var i in data) {
-                    resData.push({
-                        id: parseInt(data[i][0]),
-                        text: data[i][1]
-                    });
+
+                    console.log(i)
+
+                    if(i > Config.max_countries_list)
+                        break;
+
+                    if(data[i])
+                        resData.push({
+                            id: parseInt(data[i][0]),
+                            text: data[i][1]
+                            //,state: {selected: i<1}
+                        });
                 }
-                
+
                 $('#filter_partner_code', self.$container).jstree({
                     core: {
                         multiple: false,
@@ -281,7 +293,7 @@ define([
             },
             success: function(rawData) {
 
-                if (  self.idlayer == id) {
+                if (self.idlayer == id) {
 
                     var joinColumnlabel = 'areanamee',
                         joinColumn = 'adm0_code',
