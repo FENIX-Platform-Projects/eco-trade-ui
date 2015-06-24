@@ -54,12 +54,34 @@ define([
         self.$container.append( Handlebars.compile(tmplMap)() );
 
         self.initMap('#map_partners');
-        self.initYearSlider(self.o.selection);        
 
         if(self.o.isCountry)
             self.initComm(self.o.selection);
         else
             self.initGrowth(self.o.selection);
+
+        var years = self.o.selection.year_list.split(',');
+        self.slideCfg = {
+                id: 'filter_year_map',
+                tooltip: 'always',
+                value: parseInt(_.first(years)),
+                min: parseInt(_.first(years)),
+                max: parseInt(_.last(years))
+            };
+
+        self.slider = $('#filter_year_map', self.$container).bootstrapSlider(self.slideCfg);
+        self.slider.on('slideStop', function(sel) {
+            self.o.onChangeYear( sel.value );
+            
+            self.o.selection.year = sel.value;
+
+            self.updateLayer(self.o.selection);
+    
+            if(!self.o.isCountry)
+                self.initTopPartners(self.o.selection);
+        });
+
+        self.initYearSlider(self.o.selection);
     };
 
     MAP.prototype.initTopPartners = function(selection) {
@@ -149,9 +171,6 @@ define([
 
         var self = this;
 
-        //TOD DEBUG
-        //selection.partner_code = 118;
-
         wdsClient.retrieve({
             payload: {
                 query: Config.queries.map_subcommodities,
@@ -170,8 +189,9 @@ define([
 
         var self = this;
 
-        var years = selection.year_list.split(','),
-            slideCfg = {
+        var years = selection.year_list.split(',');
+
+        self.slideCfg = {
                 id: 'filter_year_map',
                 tooltip: 'always',
                 value: parseInt(_.first(years)),
@@ -179,32 +199,17 @@ define([
                 max: parseInt(_.last(years))
             };
 
-        if(!self.slider)
-        {
-            self.slider = $('#filter_year_map', self.$container).bootstrapSlider(slideCfg);
-            self.slider.on('slideStop', function(sel) {
-                self.o.onChangeYear( sel.value );
-                
-                self.o.selection.year = sel.value;
-                self.updateLayer(self.o.selection);
-        
-                if(self.o.isCountry)
-                    self.initLeftPartners(self.o.selection);
-                else
-                    self.initTopPartners(self.o.selection);
-            });
-        }
-        else {
-            self.slider.bootstrapSlider('setAttribute','min', slideCfg.min);
-            self.slider.bootstrapSlider('setAttribute','max', slideCfg.max);
-            self.slider.bootstrapSlider('setValue', slideCfg.min);
+        if(self.slider) {
+            self.slider.bootstrapSlider('setAttribute','min', self.slideCfg.min);
+            self.slider.bootstrapSlider('setAttribute','max', self.slideCfg.max);
+            self.slider.bootstrapSlider('setValue', self.slideCfg.min);
         }
         
-        selection.year = slideCfg.value;
-        
+        selection.year = self.slideCfg.value;
+
         self.updateLayer(selection);
 
-        if(self.o.isCountry)
+        if(!self.o.isCountry)
             self.initLeftPartners(selection);
         else
             self.initTopPartners(selection);    
@@ -212,10 +217,11 @@ define([
 
     MAP.prototype.initMap = function(id) {
 
+        var self = this;
+
         this.map = new FM.Map(id, Config.map_config);
 /*
     //TODO layer violet contains Config.eco_countries
-
             joinColumn = 'adm0_code',
             joinData = _.map(rawData, function(v) {
                 return _.object([v[0]], [v[1]]);
@@ -243,7 +249,7 @@ define([
             opacity: 1,
             zindex: 1000,
             lang: 'en'
-        }));        
+        }));
         this.map.createMap(40,0);
     };
 
@@ -269,11 +275,13 @@ define([
         self.updateLayer(self.o.selection);
     };
 
+
     MAP.prototype.updateLayer = function(selection) {
 
         var self = this;
 
-        console.log('updateLayer',selection);
+        var id = _.uniqueId();
+        self.idlayer = id;
 
         wdsClient.retrieve({
             payload: {
@@ -282,42 +290,44 @@ define([
             },
             success: function(rawData) {
 
-                var joinColumnlabel = 'areanamee',
-                    joinColumn = 'adm0_code',
-                    joinData = _.map(rawData, function(v) {
-                        return _.object([v[0]], [v[1]]);
-                    });
-            
-                if(self.joinlayer)
-                    self.map.removeLayer(self.joinlayer);
+                if (  self.idlayer == id) {
 
-                self.joinlayer = new FM.layer({
-                    ranges: Config.legend_config[ selection.trade_flow_code ].ranges,
-                    joindata: joinData,            
-                    joincolumn: joinColumn,
-                    joincolumnlabel: joinColumnlabel,
-                    layers: 'fenix:gaul0_faostat_3857',
-                    layertitle: Config.legend_config[ selection.trade_flow_code ].title,
-                    opacity: 1,
-                    zindex: 500,
-                    mu: "US$",
-                    legendsubtitle: "",
-                    layertype: "JOIN",
-                    jointype: "shaded",
-                    openlegend: true,
-                    defaultgfi: true,
-                    colorramp: Config.legend_config[ selection.trade_flow_code ].colors,
-                    intervals: 7,
-                    lang: "en",            
-                    customgfi: {
-                        showpopup: false,             
-                        content: {
-                            en: "{{"+joinColumn+"}}"
+                    var joinColumnlabel = 'areanamee',
+                        joinColumn = 'adm0_code',
+                        joinData = _.map(rawData, function(v) {
+                            return _.object([v[0]], [v[1]]);
+                        });
+
+                    if(self.joinlayer)
+                        self.map.removeLayer(self.joinlayer);
+
+                    self.joinlayer = new FM.layer({
+                        ranges: Config.legend_config[ selection.trade_flow_code ].ranges,
+                        joincolumnlabel: joinColumnlabel,
+                        joincolumn: joinColumn,
+                        joindata: joinData,
+                        layers: 'fenix:gaul0_faostat_3857',
+                        layertitle: Config.legend_config[ selection.trade_flow_code ].title,
+                        opacity: 1,
+                        zindex: 500,
+                        mu: "US$",
+                        legendsubtitle: "",
+                        layertype: "JOIN",
+                        jointype: "shaded",
+                        openlegend: true,
+                        defaultgfi: true,
+                        colorramp: Config.legend_config[ selection.trade_flow_code ].colors,
+                        intervals: 7,
+                        lang: "en",
+                        customgfi: {
+                            showpopup: false,             
+                            content: {
+                                en: "{{"+joinColumn+"}}"
+                            }
                         }
-                        //TODO ,callback: _.bind(self.handleCountrySelection, self)
-                    }
-                });
-                self.map.addLayer(self.joinlayer);
+                    });
+                    self.map.addLayer(self.joinlayer);
+                }
             }
         });        
     };

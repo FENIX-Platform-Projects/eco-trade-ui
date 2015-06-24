@@ -33,6 +33,9 @@ define([
             isCountry: false,
             onSubmit: function (selection) {
                 rmap.renderSelection(selection);
+                
+                rmap.updateLayer(selection);
+
                 chartsHandler.renderCharts(selection, Config.wds_config, false);
             }
         });
