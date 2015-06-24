@@ -19,6 +19,7 @@ define([
         var self = this;
 
         self.opts = _.defaults(opts, {
+            isCountry: false,
             container: '',
             onSubmit: $.noop
         });

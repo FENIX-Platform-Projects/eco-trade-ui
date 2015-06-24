@@ -38,8 +38,8 @@ section {
 	min-height: 182px;
 }
 .overview img {
-	max-width: 300px;
-	max-height: 100px;
+	max-width: 250px;
+	height: auto;
 }
 #filter_trade_flow_code label,
 #filter_trade_flow_code_country label {

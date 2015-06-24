@@ -28,6 +28,7 @@ define([
         var self = this;
 
         self.o = _.defaults(opts, {
+            isCountry: false,
             selection: {
                 year: Config.rangeslider_config.defaultValues.min, //single year only for map
                 year_list: _.range(
@@ -35,7 +36,8 @@ define([
                     Config.rangeslider_config.defaultValues.max+1
                 ).join(','),
                 commodity_code: null,
-                trade_flow_code:'EXP'
+                trade_flow_code:'EXP',
+                partner_code: null
             },
             selectedCountries: [],
             cl: {
@@ -53,7 +55,11 @@ define([
 
         self.initMap('#map_partners');
         self.initYearSlider(self.o.selection);        
-        self.initGrowth(self.o.selection);
+
+        if(self.o.isCountry)
+            self.initComm(self.o.selection);
+        else
+            self.initGrowth(self.o.selection);
     };
 
     MAP.prototype.initPartners = function(selection) {
@@ -97,6 +103,27 @@ define([
         });
     };
 
+    MAP.prototype.initComm = function(selection) {
+
+        var self = this;
+
+        //TOD DEBUG
+        selection.partner_code = 122;
+
+        wdsClient.retrieve({
+            payload: {
+                query: Config.queries.map_partner,
+                queryVars: selection
+            },
+            success: function (data) {
+                $('#tab_growth', self.$container).html( tableGrowth({
+                    headers: ['Commodity', selection.year+' (USD)'],
+                    rows: data
+                }) );
+            }
+        });
+    };    
+
     MAP.prototype.initYearSlider = function(selection) {
 
         var self = this;
@@ -133,14 +160,37 @@ define([
     MAP.prototype.initMap = function(id) {
 
         this.map = new FM.Map(id, Config.map_config);
+/*
+    //TODO layer violet contains Config.eco_countries
+
+            joinColumn = 'adm0_code',
+            joinData = _.map(rawData, function(v) {
+                return _.object([v[0]], [v[1]]);
+            });
+    
+        if(self.joinlayer)
+            self.map.removeLayer(self.joinlayer);
+
+        self.joinlayer = new FM.layer({
+            ranges: Config.legend_config[ selection.trade_flow_code ].ranges,
+            joindata: joinData,  
+        this.map.addLayer(new FM.layer({
+            layers: 'fenix:gaul0_line_3857',
+            layertitle: 'ECO Countries',
+            urlWMS: 'http://fenix.fao.org/geoserver',
+            opacity: 1,
+            zindex: 500,
+            lang: 'en'
+        }));
+*/
         this.map.addLayer(new FM.layer({
             layers: 'fenix:gaul0_line_3857',
             layertitle: 'Country Boundaries',
             urlWMS: 'http://fenix.fao.org/geoserver',
             opacity: 1,
-            zindex: '500',
+            zindex: 1000,
             lang: 'en'
-        }));
+        }));        
         this.map.createMap(40,0);
     };
 
@@ -152,11 +202,17 @@ define([
 
         if(!self.o.selection.year)
             self.o.selection.year = selection.year_list.split(',')[0];
+
         if(!self.o.selection.trade_flow_code)
-            self.o.selection.trade_flow_code = 'EXP';
+            self.o.selection.trade_flow_code = 'EXP';        
 
         self.initYearSlider(self.o.selection);
-        self.initGrowth(self.o.selection);
+        
+        if(self.o.isCountry)
+            self.initComm(self.o.selection);
+        else
+            self.initGrowth(self.o.selection);
+
         self.updateLayer(self.o.selection);
     };
 
@@ -189,7 +245,8 @@ define([
                     joincolumnlabel: joinColumnlabel,
                     layers: 'fenix:gaul0_faostat_3857',
                     layertitle: Config.legend_config[ selection.trade_flow_code ].title,
-                    opacity: 1,            
+                    opacity: 1,
+                    zindex: 500,
                     mu: "US$",
                     legendsubtitle: "",
                     layertype: "JOIN",

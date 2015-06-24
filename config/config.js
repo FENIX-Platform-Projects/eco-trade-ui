@@ -1,6 +1,10 @@
 define(function () {
-    var reporter_countries = "('1', '19', '117','132','138','188','239', '249', '250')";
+
+    var eco_countries =  [1, 19, 117,132,138,188,239, 249, 250, 261],
+        reporter_countries = "('"+eco_countries.join("','")+"')";
+
     return {
+        eco_countries: eco_countries,
         wds_config: {
             datasource: 'DEMO_FENIX',
             outputType: 'array'
@@ -16,7 +20,7 @@ define(function () {
                 geosearch: false
             },
             guiController: {
-                overlay: true,
+                overlay: false,
                 baselayer: false,
                 wmsLoader: false
             }
@@ -49,26 +53,26 @@ define(function () {
             test: 'SELECT year FROM ecotrade_region_trade',
             // REGIONS QUERIES
             table_region: "select year-1 || '/'|| year as season, coalesce(round(value,2)|| ' %', '-') as value from ecotrade.ecotrade_region_growth where year in ({year_list}) and commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}'",
-            map_region: "select partner_code, value from ecotrade.ecotrade_region_trade where partner_code not in('WLD', 'WTN', 'WTO') and commodity_code ='{commodity_code}' and trade_flow_code ='{trade_flow_code}' and year = {year} order by year",
+            map_region: "select partner_code, value from ecotrade.ecotrade_region_trade where partner_code not in('WLD', 'WTN', 'WTO') and partner_code not in " + reporter_countries + " and commodity_code ='{commodity_code}' and trade_flow_code ='{trade_flow_code}' and year = {year} order by year",
             region_within: "select year,partner_label,value,um from ecotrade.ecotrade_region_trade where year in ({year_list}) and partner_code in ('WTO', 'WTN') and  trade_flow_code = '{trade_flow_code}' and commodity_code ='{commodity_code}'",
             region_year: "select year,trade_flow_label,value,um from ecotrade.ecotrade_region_trade where year in ({year_list}) and partner_code = 'WLD'  and trade_flow_code ='{trade_flow_code}' and commodity_code = '{commodity_code}' order by year",
-            region_partners: "select partner_label, value from ecotrade.ecotrade_region_trade where year = {year} and trade_flow_code = '{trade_flow_code}' and commodity_code ='{commodity_code}' and partner_code not in('WLD','WTN','WTO')  and partner_code not in " + reporter_countries + " order by value desc limit 6",
+            region_partners: "select partner_label, value from ecotrade.ecotrade_region_trade where year = {year} and trade_flow_code = '{trade_flow_code}' and commodity_code ='{commodity_code}' and partner_code not in('WLD','WTN','WTO')  and partner_code not in " + reporter_countries + " order by value desc limit 5",
 
             // COUNTRY QUERIES
             country_balance: "select year,commodity_label,value,um from ecotrade.ecotrade_country_tradebalance where year in ({year_list}) and reporter_code = '{reporter_code}' and commodity_code = '{commodity_code}'",
             country_bar: "select year,partner_label, value, um from ecotrade.ecotrade_country_trade where year in ({year_list}) and reporter_code = '{reporter_code}' and commodity_code = '{commodity_code}' and partner_code = 'WLD'",
             map_country: "select partner_code, value from ecotrade.ecotrade_country_trade where year = {year} and partner_code = '{partner_code}' and commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}' ",
-            map_partner: "select reporter_code, reporter_label, value from (" +
-            "select distinct on(reporter_code, reporter_label)reporter_code, reporter_label, value from(" +
-            "select reporter_code,reporter_label,  value" +
-            "from ecotrade.ecotrade_country_trade" +
-            "where year in ({year_list})" +
-            "and partner_code = '{partner_code}'" +
-            "and commodity_code = '{commodity_code}'" +
-            "and trade_flow_code = '{trade_flow_code}'" +
-            "group by value, reporter_code,reporter_label" +
-            "order by reporter_code,value DESC) as v) as g" +
-            "order by g.value desc ",
+            map_partner: "select reporter_label, value from ( " +
+                "select distinct on(reporter_code, reporter_label)reporter_code, reporter_label, value from( " +
+                "select reporter_code,reporter_label,  value " +
+                "from ecotrade.ecotrade_country_trade " +
+                "where year in ({year_list}) " +
+                "and partner_code = '{partner_code}' " +
+                "and commodity_code = '{commodity_code}' " +
+                "and trade_flow_code = '{trade_flow_code}' " +
+                "group by value, reporter_code,reporter_label " +
+                "order by reporter_code,value DESC) as v) as g " +
+                "order by g.value desc limit 6",
             map_subcommodities: "select reporter_label, value from ecotrade.ecotrade_country_subelements where year= {year} and partner_code ='{partner_code}' and reporter_code = '{reporter_code}' and " +
             "commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}' order by value"
         }

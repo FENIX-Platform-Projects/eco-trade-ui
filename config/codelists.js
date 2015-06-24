@@ -18,5 +18,6 @@ define({
         {id: "239", text: "Tajikistan"},
         {id: "249", text: "Turkey"},
         {id: "250", text: "Turkmenistan"}
+        //,{id: "261", text: "Uzbekistan"}
     ]
 })
