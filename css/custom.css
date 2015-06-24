@@ -9,12 +9,12 @@ section {
 #map_partners_region,
 #tab_growth,
 #filter_country{
-	height: 300px;
+	height: 320px;
 }
-
-#filter_year_map_label {
-	height: 50px;
-	font-weight: bold;
+#filter_year_map_label,
+#filter_year_map {
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 #tab_growth {
 	overflow-y:scroll;
@@ -24,7 +24,4 @@ section {
 	opacity: 0.8;
 	min-width:104px;
 	min-height: 182px;
-}
-#filter_country{
-/*	overflow-y: auto;*/
 }
