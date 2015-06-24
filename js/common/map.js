@@ -52,9 +52,9 @@ define([
         self.$container.append( Handlebars.compile(tmplMap)() );
 
         self.initMap('#map_partners_region');
-        //self.initPartners(self.o.selection);
+        self.initPartners(self.o.selection);
         self.initYearSlider(self.o.selection);
-     //   self.initGrowth(self.o.selection);
+        self.initGrowth(self.o.selection);
     };
 
     MAP.prototype.initPartners = function(selection) {
@@ -63,25 +63,17 @@ define([
 
         wdsClient.retrieve({
             payload: {
-                query: Config.queries.table_region,
+                query: Config.queries.region_partners,
                 queryVars: selection
             },
             success: function (data) {
 
-                console.log(data);
-                
-                wdsClient.retrieve({
-                    payload: {
-                        query: Config.queries.table_region,
-                        queryVars: selection
-                    },
-                    success: function (data) {
-                        $('#tab_growth', self.$container).html( tableGrowth({
-                            headers: ['Period','Growth Rate'],
-                            rows: data
-                        }) );
-                    }
-                });
+                console.log('initPartners',data);
+
+                $('#filter_partner_code', self.$container).html( tableGrowth({
+                    headers: ['Partner','USD'],
+                    rows: data
+                }) );
             }
         });
     };
@@ -161,6 +153,7 @@ define([
         if(self.o.selection.year == null)
             self.o.selection.year = selection.year_list.split(',')[0];
 
+        self.initPartners(self.o.selection);
         self.initYearSlider(self.o.selection);
         self.initGrowth(self.o.selection);
         self.updateLayer(self.o.selection);
