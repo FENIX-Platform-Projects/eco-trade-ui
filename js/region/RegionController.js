@@ -56,7 +56,6 @@ define([
         });
 
 
-        debugger;
        var sidebar = $('body').prepend(SidebarTmpl);
     };
 
