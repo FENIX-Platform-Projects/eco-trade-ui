@@ -69,7 +69,7 @@ define([
     CountryController.prototype.reinitFilterValues = function(urlImages){
 
         var self = this;
-        var urlImg = (typeof urlImages !== 'undefined')?urlImages: self.$imageUrl;
+        var urlImg = (typeof urlImages !== "undefined" && urlImages != null)?urlImages: self.$imageUrl;
         this.filter.reinitSidebar( this.$tmpl,  urlImg);
         this.filter.reinitTradeFlowRadio();
     }

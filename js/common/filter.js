@@ -1,17 +1,15 @@
 define([
-    'jquery','underscore','bootstrap','handlebars','jstree','rangeslider',
+    'jquery', 'underscore', 'bootstrap', 'handlebars', 'jstree', 'rangeslider',
     'Config',
     'Codelists',
     'text!../../html/region/filter.html',
     'text!../../html/country/filter.html',
     'amplify'
-], function (
-    $, _, bootstrap, Handlebars, jstree, rangeslider,
-    Config,
-    Codelists,
-    tmplFilterRegion,
-    tmplFilterCountry
-) {
+], function ($, _, bootstrap, Handlebars, jstree, rangeslider,
+             Config,
+             Codelists,
+             tmplFilterRegion,
+             tmplFilterCountry) {
     'use strict';
 
     function FILTER(opts) {
@@ -25,7 +23,6 @@ define([
             onSubmit: $.noop
         });
 
-
         self.selection = {
             year: null,
             year_list: [],
@@ -34,21 +31,21 @@ define([
             reporter_code: null
         };
 
-        var tmplFilter = (self.opts.isCountry)? tmplFilterCountry : tmplFilterRegion;
+        var tmplFilter = (self.opts.isCountry) ? tmplFilterCountry : tmplFilterRegion;
         self.$container = (self.opts.container instanceof jQuery) ? self.opts.container : $(self.opts.container);
-        self.$container.append( Handlebars.compile(tmplFilter)() );
+        self.$container.append(Handlebars.compile(tmplFilter)());
 
-        self.$container.find('.filter_submit').on('click', function(e) {
+        self.$container.find('.filter_submit').on('click', function (e) {
             e.preventDefault();
             self.opts.onSubmit(self.selection);
         });
 
-        if(self.opts.isCountry) {
+        if (self.opts.isCountry) {
             self.initPartners();
             self.initCommodities();
             self.initYear();
             self.initFlow();
-        }else{
+        } else {
             self.initCommodities();
             self.initYear();
             self.initFlow();
@@ -56,7 +53,7 @@ define([
     };
 
 
-    FILTER.prototype.initFlow = function() {
+    FILTER.prototype.initFlow = function () {
 
         var self = this;
 
@@ -71,7 +68,7 @@ define([
     };
 
 
-    FILTER.prototype.initCommodities = function() {
+    FILTER.prototype.initCommodities = function () {
         var self = this;
         var treeComm$ = $(self.opts.filters.commodity, self.$container);
 
@@ -90,7 +87,7 @@ define([
         });
     };
 
-    FILTER.prototype.initPartners = function() {
+    FILTER.prototype.initPartners = function () {
         var self = this;
         var partnerComm$ = $(self.opts.filters.partner, self.$container);
 
@@ -108,16 +105,15 @@ define([
             }
         }).on('changed.jstree', function (e, data) {
             e.preventDefault();
-                self.selection.reporter_code = data.selected[0];
-            if(self.opts.isCountry){
+            self.selection.reporter_code = data.selected[0];
+            if (self.opts.isCountry) {
                 amplify.publish('partner.changed', data.selected[0])
             }
         });
     }
 
 
-
-    FILTER.prototype.initYear = function() {
+    FILTER.prototype.initYear = function () {
 
         var self = this;
 
@@ -126,71 +122,71 @@ define([
         self.rangeMonths$.rangeSlider(Config.rangeslider_config);
 
         var vals = self.rangeMonths$.rangeSlider("values");
-        self.selection.year_list = _.range(vals.min, vals.max+1).join();
+        self.selection.year_list = _.range(vals.min, vals.max + 1).join();
 
-        self.rangeMonths$.on('valuesChanged', function(e, sel) {
-            self.selection.year_list = _.range(sel.values.min, sel.values.max+1).join();
+        self.rangeMonths$.on('valuesChanged', function (e, sel) {
+            self.selection.year_list = _.range(sel.values.min, sel.values.max + 1).join();
         });
 
         self.rangeYear = self.rangeMonths$.data("ionRangeSlider");
     };
 
 
-    FILTER.prototype.getSelection = function() {
+    FILTER.prototype.getSelection = function () {
         var self = this;
         return self.selection;
     };
 
-    FILTER.prototype.reset = function() {
-        var self =this;
+    FILTER.prototype.reset = function () {
+        var self = this;
         self.rangeYear.reset();
     };
 
 
-    FILTER.prototype.reinitTradeFlowRadio = function() {
+    FILTER.prototype.reinitTradeFlowRadio = function () {
         var self = this;
 
         self.selection.trade_flow_code === 'IMP' ?
-            self.radioComm$[1].checked = true:
+            self.radioComm$[1].checked = true :
             self.radioComm$[0].checked = true;
     }
 
-    FILTER.prototype.reinitSidebar = function(template, urlImages) {
+    FILTER.prototype.reinitSidebar = function (template, urlImages) {
         var self = this;
-        if(self.opts.isCountry) {
-            self._redrawSidebarCountry(template,urlImages)
-        }else{
+        if (self.opts.isCountry) {
+            self._redrawSidebarCountry(template, urlImages)
+        } else {
             self._redrawSidebarRegion(template)
         }
     }
 
-    FILTER.prototype._redrawSidebarCountry = function(template, urlImages) {
+    FILTER.prototype._redrawSidebarCountry = function (template, urlImages) {
 
         var self = this;
-
-
         var regionSidebar = $('#overview_region')
-        if (regionSidebar.length >0) {
+        if (regionSidebar.length > 0) {
             $('#overview_region').remove();
             $('body').prepend(template);
         }
 
-        if (!self.$urlImages || self.$urlImages !== urlImages) {
+        if (!self.$urlImages) {
             self.$urlImages = urlImages;
-            $('#gdp_country').attr("src", urlImages + 'gdp.png');
-            $('#balance_country').attr("src", urlImages + 'balance.png');
-            $('#comm_country').attr("src", urlImages + 'gdp.png');
+        } else {
+            self.$urlImages = (self.$urlImages != urlImages) ? self.$urlImages : urlImages;
         }
+        $('#gdp_country').attr("src", urlImages + 'gdp.png');
+        $('#balance_country').attr("src", urlImages + 'balance.png');
+        $('#comm_country').attr("src", urlImages + 'gdp.png');
+
     }
 
-    FILTER.prototype._redrawSidebarRegion = function(template) {
+    FILTER.prototype._redrawSidebarRegion = function (template) {
 
-        var regionSidebar =  $('#overview_country')
-        if(regionSidebar){
+        var regionSidebar = $('#overview_country')
+        if (regionSidebar) {
             $('#overview_country').remove();
             $('body').prepend(template);
         }
-
     }
 
 
