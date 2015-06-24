@@ -65,8 +65,6 @@ define(['jquery', 'underscore', 'handlebars', 'text!html/region/charts.html',
         } else {
             callback = (isSpecial) ? this.renderRegionWithin : this.renderRegionBar;
         }
-        console.log(callback)
-
 
         wdsClient.retrieve({
             payload: {
@@ -74,12 +72,14 @@ define(['jquery', 'underscore', 'handlebars', 'text!html/region/charts.html',
                 queryVars: self.o.queryParams
             },
             success: function (model) {
+                if(model.length >0){
                 creator.init({
                     model: model,
                     template: {},
                     creator: {},
                     onReady: _.bind(callback, self)
                 });
+            }
             }
         });
     };

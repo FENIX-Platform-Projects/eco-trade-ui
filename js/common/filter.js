@@ -100,10 +100,7 @@ define([
                 },
                 data: Codelists.countries
             },
-            plugins: ["wholerow", "checkbox", "search"],
-            "search": {
-                show_only_matches: true
-            }
+            plugins: ["wholerow", "checkbox"],
         }).on('changed.jstree', function (e, data) {
             e.preventDefault();
             self.selection.reporter_code = data.selected[0];

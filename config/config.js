@@ -62,19 +62,29 @@ define(function () {
             country_balance: "select year,commodity_label,value,um from ecotrade.ecotrade_country_tradebalance where year in ({year_list}) and reporter_code = '{reporter_code}' and commodity_code = '{commodity_code}'",
             country_bar: "select year,partner_label, value, um from ecotrade.ecotrade_country_trade where year in ({year_list}) and reporter_code = '{reporter_code}' and commodity_code = '{commodity_code}' and partner_code = 'WLD'",
             map_country: "select partner_code, value from ecotrade.ecotrade_country_trade where year = {year} and partner_code = '{partner_code}' and commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}' ",
-            map_partner: "select reporter_label, value from ( " +
-                "select distinct on(reporter_code, reporter_label)reporter_code, reporter_label, value from( " +
-                "select reporter_code,reporter_label,  value " +
+/*            map_partner: "select reporter_code, reporter_label, value from ( " +
+                "select distinct on(partner_code, partner_label)partner_code, partner_label, value from( " +
+                "select partner_code,partner_label,  value " +
                 "from ecotrade.ecotrade_country_trade " +
                 "where year in ({year_list}) " +
-                "and partner_code = '{partner_code}' " +
+                "and reporter_code = '{reporter_code}' " +
                 "and commodity_code = '{commodity_code}' " +
                 "and trade_flow_code = '{trade_flow_code}' " +
-                "group by value, reporter_code,reporter_label " +
-                "order by reporter_code,value DESC) as v) as g " +
-                "order by g.value desc limit 6",
-            map_subcommodities: "select reporter_label, value from ecotrade.ecotrade_country_subelements where year= {year} and partner_code ='{partner_code}' and reporter_code = '{reporter_code}' and " +
-            "commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}' order by value"
+                "group by value, partner_code,partner_label " +
+                "order by partner_code,value DESC) as v) as g " +
+                "order by g.value desc limit 6",*/
+            map_partner: 
+                "select partner_code, partner_label, value from "+
+                "(select distinct on(partner_code, partner_label)partner_code, partner_label, "+
+                "value from( select partner_code,partner_label,  value  "+
+                "from ecotrade.ecotrade_country_subelements where year = {year} "+///in ({year_list})  "+
+                "and reporter_code = '{reporter_code}' and commodity_code = '{commodity_code}'  "+
+                "and trade_flow_code = '{trade_flow_code}'  "+
+                "and partner_code not in('WLD', 'WTN', 'WTO') and partner_code not in " + reporter_countries + " "+
+                "group by value, partner_code,partner_label order by partner_code,value DESC)  "+
+                "as v) as g order by value desc limit 5 ",
+            map_subcommodities: "select sub_commodity_label, value from ecotrade.ecotrade_country_subelements where year= {year} and partner_code ='{partner_code}' and reporter_code = '{reporter_code}' and " +
+                "commodity_code = '{commodity_code}' and trade_flow_code = '{trade_flow_code}' order by value desc"
         }
     };
 });

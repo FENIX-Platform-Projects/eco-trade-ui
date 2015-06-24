@@ -34,11 +34,7 @@ define([
             filters: self.$containers.filters,
             isCountry: true,
             onSubmit: function (selection) {
-                
-                console.log('selection',selection)
-                
                 rmap.renderSelection(selection);
-
                 chartsHandler.renderCharts(selection, Config.wds_config, true);
             }
         });

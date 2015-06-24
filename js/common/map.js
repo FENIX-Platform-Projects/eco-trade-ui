@@ -3,7 +3,7 @@ define([
     'Config',
     'Codelists',
     'WDSClient',
-    'text!html/region/map.html',
+    'text!html/map.html',
     'text!fx-ui-table',    
     'fenix-ui-map'
 ], function (
@@ -62,7 +62,7 @@ define([
             self.initGrowth(self.o.selection);
     };
 
-    MAP.prototype.initPartners = function(selection) {
+    MAP.prototype.initTopPartners = function(selection) {
 
         var self = this;
 
@@ -81,6 +81,48 @@ define([
                     headers: ['Partner', selection.year+' (USD)'],
                     rows: data
                 }) );
+            }
+        });
+    };
+
+    MAP.prototype.initLeftPartners = function(selection) {
+
+        var self = this;
+
+        wdsClient.retrieve({
+            payload: {
+                query: Config.queries.map_partner,
+                queryVars: selection
+            },
+            success: function (data) {
+
+                if(!data || data.length===0)
+                    return;
+                
+                var resData = [];
+                for(var i in data) {
+                    resData.push({
+                        id: parseInt(data[i][0]),
+                        text: data[i][1]
+                    });
+                }
+                
+                $('#filter_partner_code', self.$container).jstree({
+                    core: {
+                        multiple: false,
+                        themes: {
+                            icons: false
+                        },
+                        data: resData
+                    },
+                    plugins: ["wholerow", "checkbox"]
+                }).on('changed.jstree', function (e, data) {
+                    e.preventDefault();
+                    
+                    self.o.selection.partner_code = data.selected[0];
+
+                    self.initComm(self.o.selection);
+                });
             }
         });
     };
@@ -108,11 +150,11 @@ define([
         var self = this;
 
         //TOD DEBUG
-        selection.partner_code = 122;
+        //selection.partner_code = 118;
 
         wdsClient.retrieve({
             payload: {
-                query: Config.queries.map_partner,
+                query: Config.queries.map_subcommodities,
                 queryVars: selection
             },
             success: function (data) {
@@ -142,9 +184,14 @@ define([
             self.slider = $('#filter_year_map', self.$container).bootstrapSlider(slideCfg);
             self.slider.on('slideStop', function(sel) {
                 self.o.onChangeYear( sel.value );
+                
                 self.o.selection.year = sel.value;
                 self.updateLayer(self.o.selection);
-                self.initPartners(self.o.selection);
+        
+                if(self.o.isCountry)
+                    self.initLeftPartners(self.o.selection);
+                else
+                    self.initTopPartners(self.o.selection);
             });
         }
         else {
@@ -152,9 +199,15 @@ define([
             self.slider.bootstrapSlider('setAttribute','max', slideCfg.max);
             self.slider.bootstrapSlider('setValue', slideCfg.min);
         }
+        
         selection.year = slideCfg.value;
+        
         self.updateLayer(selection);
-        self.initPartners(selection);        
+
+        if(self.o.isCountry)
+            self.initLeftPartners(selection);
+        else
+            self.initTopPartners(selection);    
     };
 
     MAP.prototype.initMap = function(id) {
@@ -220,7 +273,7 @@ define([
 
         var self = this;
 
-        console.log(selection);
+        console.log('updateLayer',selection);
 
         wdsClient.retrieve({
             payload: {

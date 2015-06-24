@@ -32,7 +32,6 @@ define([
             filters: self.$containers.filters,
             isCountry: false,
             onSubmit: function (selection) {
-
                 rmap.renderSelection(selection);
                 chartsHandler.renderCharts(selection, Config.wds_config, false);
             }
