@@ -27,9 +27,11 @@ define([
 
 
         self.selection = {
+            year: null,
             year_list: [],
             commodity_code: null,
-            trade_flow_code: null
+            trade_flow_code: null,
+            reporter_code: null
         };
 
         var tmplFilter = (self.opts.isCountry)? tmplFilterCountry : tmplFilterRegion;
