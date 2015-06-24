@@ -4,13 +4,15 @@ define([
     'WDSClient',
     './../common/filter',
     '../common/map',
-    '../common/ChartsHandler'
-], function ($, _, bootstrap, Handlebars,
+    '../common/ChartsHandler',
+    'text!../../html/region/sidebar.html'],
+    function ($, _, bootstrap, Handlebars,
              Config,
              WDSClient,
              Filter,
              regionMap,
-             ChartsHandler) {
+             ChartsHandler,
+             SidebarTmpl) {
 
     'use strict'
 
@@ -52,6 +54,10 @@ define([
             container: self.$containers.container,
             queries: Config.queries
         });
+
+
+        debugger;
+       var sidebar = $('body').prepend(SidebarTmpl);
     };
 
     RegionController.prototype.reinitFilterValues = function(){
