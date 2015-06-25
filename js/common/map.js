@@ -57,8 +57,6 @@ define([
 
         self.initMap(self.mapId);
 
-
-
         if(self.o.isCountry)
             self.initComm(self.o.selection);
         else
@@ -66,23 +64,24 @@ define([
 
         var years = self.o.selection.year_list.split(',');
         self.slideCfg = {
-                id: 'filter_year_map',
-                tooltip: 'always',
-                value: parseInt(_.first(years)),
-                min: parseInt(_.first(years)),
-                max: parseInt(_.last(years))
-            };
+            id: 'filter_year_map',
+            tooltip: 'always',
+            value: parseInt(_.first(years)),
+            min: parseInt(_.first(years)),
+            max: parseInt(_.last(years))
+        };
 
         self.slider = $('#filter_year_map', self.$container).bootstrapSlider(self.slideCfg);
         self.slider.on('slideStop', function(sel) {
             self.o.onChangeYear( sel.value );
             
             self.o.selection.year = sel.value;
-
-            self.updateLayer(self.o.selection);
     
-            if(!self.o.isCountry)
+            if(!self.o.isCountry) {
+
+                self.updateLayer(self.o.selection);
                 self.initTopPartners(self.o.selection);
+            }
             else
                 self.initLeftPartners(self.o.selection);            
         });
@@ -130,8 +129,6 @@ define([
                 var resData = [];
                 for(var i in data) {
 
-                    console.log(i)
-
                     if(i > Config.max_countries_list)
                         break;
 
@@ -142,23 +139,39 @@ define([
                             //,state: {selected: i<1}
                         });
                 }
-
-                $('#filter_partner_code', self.$container).jstree({
-                    core: {
-                        multiple: false,
-                        themes: {
-                            icons: false
+                if(!self.jstree) {
+                    self.jstree = $('#filter_partner_code', self.$container).jstree({
+                        core: {
+                            multiple: false,
+                            themes: {
+                                icons: false
+                            },
+                            data: resData
                         },
-                        data: resData
-                    },
-                    plugins: ["wholerow", "checkbox"]
-                }).on('changed.jstree', function (e, data) {
-                    e.preventDefault();
-                    
-                    self.o.selection.partner_code = data.selected[0];
+                        plugins: ["wholerow", "checkbox"]
+                    }).on('changed.jstree', function (e, data) {
+                        e.preventDefault();
+                        
+                        self.o.selection.partner_code = data.selected[0];
 
-                    self.initComm(self.o.selection);
-                });
+                        self.initComm(self.o.selection);
+
+                        console.log(self.o.selection)
+                        self.zoomTo([parseInt(self.o.selection.partner_code), parseInt(self.o.selection.reporter_code)]);
+                    });
+                } else {
+                    $('#filter_partner_code', self.$container).jstree({
+                        core: {
+                            multiple: false,
+                            themes: {
+                                icons: false
+                            },
+                            data: resData
+                        },
+                        plugins: ["wholerow", "checkbox"]
+                    });
+                    $('#filter_partner_code', self.$container).jstree('refresh');
+                }
             }
         });
     };
