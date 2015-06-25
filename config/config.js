@@ -45,7 +45,7 @@ define(function () {
             ,
             step: 1,
             defaultValues: {
-                min: 2004,
+                min: 2005,
                 max: 2010
             }
         },

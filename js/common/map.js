@@ -339,7 +339,7 @@ define([
                         customgfi: {
                             showpopup: true,             
                             content: {
-                                en: '<h2 style="color:#666">{{areanamee}} <br> <b>{{{adm0_code}}}</b> USD</h2>'
+                                en: '<h3 style="color:#666">{{areanamee}} <br> <b>{{{adm0_code}}}</b> USD</h3>'
                             }
                         }
                     });
