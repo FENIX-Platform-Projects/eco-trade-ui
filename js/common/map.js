@@ -348,7 +348,26 @@ define([
     };
 
     MAP.prototype.zoomTo = function(codes) {
-        this.map.zoomTo("country", "adm0_code", codes);
+        
+        var self = this;
+
+        self.map.zoomTo("country", "adm0_code", codes);
+        
+        if(self.selLayer)
+            self.map.removeLayer(self.selLayer);
+
+        var cql_filter = "adm0_code IN (" + codes.join(",")+")";
+
+        self.selLayer = new FM.layer({
+            layertitle: "Selection",
+            urlWMS: 'http://fenix.fao.org/demo/fenix/geoserver',            
+            layers: 'fenix:gaul0_3857',
+            cql_filter: cql_filter,
+            style: 'gaul0_highlight_polygon_strong',
+            opacity: 0.9,
+            zindex: 2000
+        });
+        self.map.addLayer(self.selLayer);        
     };
 
     return MAP;

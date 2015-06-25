@@ -20,7 +20,7 @@ define(function () {
                 geosearch: false
             },
             guiController: {
-                overlay: false,
+                overlay: true,
                 baselayer: false,
                 wmsLoader: false
             }
