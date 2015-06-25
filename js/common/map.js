@@ -139,39 +139,29 @@ define([
                             //,state: {selected: i<1}
                         });
                 }
-                if(!self.jstree) {
-                    self.jstree = $('#filter_partner_code', self.$container).jstree({
-                        core: {
-                            multiple: false,
-                            themes: {
-                                icons: false
-                            },
-                            data: resData
-                        },
-                        plugins: ["wholerow", "checkbox"]
-                    }).on('changed.jstree', function (e, data) {
-                        e.preventDefault();
-                        
-                        self.o.selection.partner_code = data.selected[0];
 
-                        self.initComm(self.o.selection);
+                if(self.jstree)
+                    $('#filter_partner_code', self.$container).jstree('destroy');
 
-                        console.log(self.o.selection)
-                        self.zoomTo([parseInt(self.o.selection.partner_code), parseInt(self.o.selection.reporter_code)]);
-                    });
-                } else {
-                    $('#filter_partner_code', self.$container).jstree({
-                        core: {
-                            multiple: false,
-                            themes: {
-                                icons: false
-                            },
-                            data: resData
+                self.jstree = $('#filter_partner_code', self.$container).jstree({
+                    plugins: ["wholerow", "checkbox"],
+                    core: {
+                        multiple: false,
+                        themes: {
+                            icons: false
                         },
-                        plugins: ["wholerow", "checkbox"]
-                    });
-                    $('#filter_partner_code', self.$container).jstree('refresh');
-                }
+                        data: resData
+                    }
+                }).on('changed.jstree', function (e, data) {
+                    e.preventDefault();
+                    
+                    self.o.selection.partner_code = data.selected[0];
+
+                    self.initComm(self.o.selection);
+
+                    console.log(self.o.selection)
+                    self.zoomTo([parseInt(self.o.selection.partner_code)]);
+                });
             }
         });
     };
@@ -292,7 +282,7 @@ define([
     };
 
 
-    MAP.prototype.updateLayer = function(selection) {
+    MAP.prototype.updateLayer = function(selection, countries) {
 
         var self = this;
 
@@ -311,33 +301,45 @@ define([
                     var joinColumnlabel = 'areanamee',
                         joinColumn = 'adm0_code',
                         joinData = _.map(rawData, function(v) {
-                            return _.object([v[0]], [v[1]]);
-                        });
+                            if(_.isArray(countries))
+                            {
+                                if(_.contains(countries, parseInt(v[0])) ) 
+                                    return _.object([v[0]], [v[1]]);
+                            }
+                            else
+                                return _.object([v[0]], [v[1]]);
+                        }),
+                        ranges = Config.legend_config[ selection.trade_flow_code ].ranges,
+                        colorramp = Config.legend_config[ selection.trade_flow_code ].colors,
+                        layertitle = Config.legend_config[ selection.trade_flow_code ].title;
+
+
+                    joinData = _.compact(joinData);
 
                     if(self.joinlayer)
                         self.map.removeLayer(self.joinlayer);
 
                     self.joinlayer = new FM.layer({
-                        ranges: Config.legend_config[ selection.trade_flow_code ].ranges,
+                        ranges: ranges,
                         joincolumnlabel: joinColumnlabel,
                         joincolumn: joinColumn,
                         joindata: joinData,
                         layers: 'fenix:gaul0_faostat_3857',
-                        layertitle: Config.legend_config[ selection.trade_flow_code ].title,
-                        opacity: 1,
+                        layertitle: layertitle,
+                        opacity: 0.8,
                         mu: "US$",
                         legendsubtitle: "",
                         layertype: "JOIN",
                         jointype: "shaded",
                         openlegend: true,
                         defaultgfi: true,
-                        colorramp: Config.legend_config[ selection.trade_flow_code ].colors,
+                        colorramp: colorramp,
                         intervals: 7,
                         lang: "en",
                         customgfi: {
-                            showpopup: false,             
+                            showpopup: true,             
                             content: {
-                                en: "{{"+joinColumn+"}}"
+                                en: '<h2 style="color:#666">{{areanamee}} <br> <b>{{{adm0_code}}}</b> USD</h2>'
                             }
                         }
                     });
@@ -352,11 +354,15 @@ define([
         var self = this;
 
         self.map.zoomTo("country", "adm0_code", codes);
-        
-        if(self.selLayer)
+  
+        self.updateLayer(self.o.selection, codes);
+/*        if(self.selLayer)
             self.map.removeLayer(self.selLayer);
 
         var cql_filter = "adm0_code IN (" + codes.join(",")+")";
+
+        if(self.joinlayer)
+            self.map.removeLayer(self.joinlayer);
 
         self.selLayer = new FM.layer({
             layertitle: "Selection",
@@ -367,7 +373,7 @@ define([
             opacity: 0.9,
             zindex: 2000
         });
-        self.map.addLayer(self.selLayer);        
+        self.map.addLayer(self.selLayer); */       
     };
 
     return MAP;
