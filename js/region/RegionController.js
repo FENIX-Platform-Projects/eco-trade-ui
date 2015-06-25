@@ -2,7 +2,7 @@ define([
     'jquery', 'underscore', 'bootstrap', 'handlebars',
     'Config',
     'WDSClient',
-    './../common/filter',
+    '../common/filter',
     '../common/map',
     '../common/ChartsHandler',
     'text!../../html/region/sidebar.html'],
@@ -54,7 +54,6 @@ define([
             container: self.$containers.container,
             queries: Config.queries
         });
-
 
         $('body').prepend(self.$tmpl);
     };

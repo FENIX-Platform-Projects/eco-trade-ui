@@ -163,7 +163,9 @@ define([
         var self = this;
         var regionSidebar = $('#overview_region')
         if (regionSidebar.length > 0) {
+            
             $('#overview_region').remove();
+            
             $('body').prepend(template);
         }
 
