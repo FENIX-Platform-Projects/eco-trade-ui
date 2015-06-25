@@ -29,8 +29,8 @@ define(function() {
             //bootstrapslider: FX_CDN + "bootstrap.slider/4.9.1/dist/bootstrap-slider.min",
             bootstrapslider: FX_CDN + "bootstrap.slider/4.9.1/js/bootstrap-slider",
 
-            WDSClient: 'submodule/fenix-ui-common/js/WDSClient',
-            'fx-ui-table': 'submodule/fenix-ui-common/html/table.html',
+            WDSClient: 'submodules/fenix-ui-common/js/WDSClient',
+            'fx-ui-table': 'submodules/fenix-ui-common/html/table.html',
 
             //fenix-ui-map
             'leaflet':                FX_CDN + 'leaflet/0.7.3/leaflet',
@@ -39,16 +39,16 @@ define(function() {
             'jquery.hoverIntent':     FX_CDN + 'jquery.hoverIntent/1.8.0/jquery.hoverIntent.min',
             'import-dependencies':    FX_CDN + 'FENIX/utils/import-dependencies-1.0',
             'jquery.i18n.properties': FX_CDN + 'jquery/1.0.9/jquery.i18n.properties-min',
-            'fenix-ui-map':           'submodule/fenix-ui-map/dist/fenix-ui-map.src',
-            'fenix-ui-map-config':    'submodule/fenix-ui-map/dist/fenix-ui-map-config',
+            'fenix-ui-map':           'submodules/fenix-ui-map/dist/fenix-ui-map.src',
+            'fenix-ui-map-config':    'submodules/fenix-ui-map/dist/fenix-ui-map-config',
 
             //fenix-ui-chart-creator
-            'fx-c-c/html':      'submodule/fenix-ui-chart-creator/src/html',            
-            'fx-c-c/start':     'submodule/fenix-ui-chart-creator/src/js/start',
-            'fx-c-c/config':    'submodule/fenix-ui-chart-creator/config',
-            'fx-c-c/adapters':  'submodule/fenix-ui-chart-creator/src/js/adapters',
-            'fx-c-c/creators':  'submodule/fenix-ui-chart-creator/src/js/creators',
-            'fx-c-c/templates': 'submodule/fenix-ui-chart-creator/src/js/templates'            
+            'fx-c-c/html':      'submodules/fenix-ui-chart-creator/src/html',
+            'fx-c-c/start':     'submodules/fenix-ui-chart-creator/src/js/start',
+            'fx-c-c/config':    'submodules/fenix-ui-chart-creator/config',
+            'fx-c-c/adapters':  'submodules/fenix-ui-chart-creator/src/js/adapters',
+            'fx-c-c/creators':  'submodules/fenix-ui-chart-creator/src/js/creators',
+            'fx-c-c/templates': 'submodules/fenix-ui-chart-creator/src/js/templates'
         },
 
         shim: {

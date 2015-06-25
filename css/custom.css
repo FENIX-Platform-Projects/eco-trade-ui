@@ -1,10 +1,10 @@
 body {
 	overflow-y:scroll;
 }
-section {
-	border: 1px solid blue;
-	margin: 20px 0;
-}
+/*section {*/
+	/*border: 1px solid blue;*/
+	/*margin: 20px 0;*/
+/*}*/
 
 .eco_map {
 	overflow: hidden;
@@ -23,7 +23,7 @@ section {
 #filter_commodity_code,
 #filter_partner_code_country {
 	height: 120px;	
-	overflow-y: scroll;
+	overflow-y: auto;
 	overflow-x: hidden;
 }
 
@@ -33,7 +33,7 @@ section {
 	margin-bottom: 20px;
 }
 #tab_growth {
-	overflow-y:scroll;
+	overflow-y:auto;
 }
 
 .fm-box-legend {
@@ -41,9 +41,9 @@ section {
 	min-width:104px;
 	min-height: 182px;
 }
-.overview {
-	margin-left: 20px;
-}
+/*.overview {*/
+	/*margin-left: 20px;*/
+/*}*/
 .overview img {
 	max-width: 250px;
 	height: auto;
@@ -53,10 +53,10 @@ section {
 	margin: 0 10px;
 }
 
-.table {
-	border: 1px solid blue;
-	height: 320px;
-}
+/*.table {*/
+	/*border: 1px solid blue;*/
+	/*height: 320px;*/
+/*}*/
 
 .dropdown-menu {
   box-shadow: 0 16px 22px rgba(0,0,0,0.4);

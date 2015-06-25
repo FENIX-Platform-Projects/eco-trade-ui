@@ -1,27 +1,31 @@
-
+<br><br>
 <section id="filter_country" class="row">
 	<div class="col-sm-2">
 		<div id="filter_partner_code_country">
 			<!-- FILLED BY JS -->
 		</div>
     </div>
-	<div class="col-sm-4">
-		<div id="filter_year_country">
-		<!-- FILLED BY JS -->
-		</div>
-	</div>
 	<div class="col-sm-2">
 		<div id="filter_commodity_code_country">
 			<!-- FILLED BY JS -->
 		</div>
-    </div>	
+	</div>
+	<div class="col-sm-5">
+		<div id="filter_year_country">
+		<!-- FILLED BY JS -->
+		</div>
+	</div>
+
 	<div class="col-sm-2">
-		<div id="filter_trade_flow_code_country">
-			<label style="color:green">Export <input type="radio" name="trade_flow_code" value="EXP" checked /></label>
-			<label style="color:blue">Import <input type="radio" name="trade_flow_code" value="IMP" /></label>
+		<div id="filter_trade_flow_country">
+			<input id="trade_flow_imp_country"type="radio" name="trade_flow_code" value="EXP" checked /><label for="trade_flow_imp_country">Export </label>
+			<input id="trade_flow_exp_country" type="radio" name="trade_flow_code" value="IMP" /><label for="trade_flow_exp_country">Import </label>
 		</div>
     </div>
 	<div class="col-sm-1">
 		<button class="btn btn-default filter_submit">Search</button>
 	</div>
 </section>
+<br>
+<hr>
+<br>
