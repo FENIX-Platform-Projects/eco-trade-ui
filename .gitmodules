@@ -1,9 +1,0 @@
-[submodule "submodule/fenix-ui-chart-creator"]
-	path = submodule/fenix-ui-chart-creator
-	url = https://github.com/FENIX-Platform/fenix-ui-chart-creator.git
-[submodule "submodule/fenix-ui-common"]
-	path = submodule/fenix-ui-common
-	url = https://github.com/FENIX-Platform/fenix-ui-common.git
-[submodule "submodule/fenix-ui-map"]
-	path = submodule/fenix-ui-map
-	url = https://github.com/FENIX-Platform/fenix-ui-map.git
